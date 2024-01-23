@@ -13,8 +13,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,20 +21,14 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Column(
         children: [
-          carInspectionInfo(context ,'미션오일 '),
+          carInspectionInfo(context),
+          SizedBox(height: 5,),
           infoTable(),
           Expanded(
-            flex: 1,
             child: Center(
               child: Container(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.1,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.95,
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width * 0.95,
                 child: InkWell(
                   onTap: () {
                     // 시간될떄 고라우터 로 리펙토링 하기
@@ -62,9 +54,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget carInspectionInfo(BuildContext context) {
 
-  Widget carInspectionInfo(BuildContext context, String title) {
-    bool? _isChecked = true;
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Container(
@@ -80,34 +71,27 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 1.0,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height * 0.3,
+        width: MediaQuery.of(context).size.width * 1.0,
+        height: MediaQuery.of(context).size.height * 0.3,
         child: ListView(
           children: [
             Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Checkbox(value: _isChecked, onChanged: (bool? value) {
-                      setState(() {
-                        _isChecked = value;
-                      });
-                    },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+
                     ),
-                    Container(
-                      decoration: BoxDecoration(),
-                      child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                    ),
-                    ElevatedButton(onPressed: () {}, child: Text('완료')),
-                  ],
-                )
+                      child: Text('공지사항',style: TextStyle(fontSize: 30,backgroundColor: Colors.blue),)),
+                ),
+                mainBoard('미션오일'),
+                mainBoard('엔진오일'),
+                mainBoard('브레이크 오일'),
+                mainBoard('엔진오일'),
+                mainBoard('엔진오일'),
+                mainBoard('엔진오일'),
+                mainBoard('엔진오일'),
               ],
             )
           ],
@@ -116,10 +100,41 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget mainBoard( String title) {
+    bool? _isChecked = false;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Checkbox(
+          checkColor: Colors.green,
+          shape:  RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          value: _isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              _isChecked = value;
+            });
+          },
+        ),
+        Container(
+
+          child: Text(
+            title,
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
+        ElevatedButton(onPressed: () {
+
+        }, child: Text('완료')),
+      ],
+    );
+  }
 
   Widget infoTable() {
     return Padding(
-      padding: const EdgeInsets.all(1.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: DataTable(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
