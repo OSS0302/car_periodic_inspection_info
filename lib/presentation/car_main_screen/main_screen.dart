@@ -1,4 +1,6 @@
 import 'package:animation_list/animation_list.dart';
+import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
+import 'package:car_periodic_inspection_info/presentation/ui/slide_panel.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
@@ -11,24 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<Map<String, dynamic>> data = [
-    {
-      'title': '1111',
-      'backgroundColor': Colors.grey,
-    },
-    {
-      'title': '2222',
-      'backgroundColor': Colors.red,
-    },
-    {
-      'title': '3333',
-      'backgroundColor': Colors.yellow,
-    },
-    {
-      'title': '4444',
-      'backgroundColor': Colors.blue,
-    },
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,76 +21,161 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: const Text('아반떼 000님 환영 합니다. '),
       ),
-      body: Expanded(
-        child: Column(
-          children: [
-            carInspectionInfo(context),
-            infoTable(),
+      body: Column(
+        children: [
+          carInspectionInfo(context ,'미션오일 '),
+          infoTable(),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Container(
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.1,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.95,
+                child: InkWell(
+                  onTap: () {
+                    // 시간될떄 고라우터 로 리펙토링 하기
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PanelScreen()),
+                    );
+                  },
+                  child: AnimationList(
+                      duration: 1000,
+                      reBounceDepth: 30,
+                      children: data.map((item) {
+                        return carInspectionListInfo(
+                            item['title'], item['backgroundColor']);
+                      }).toList()),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+
+  Widget carInspectionInfo(BuildContext context, String title) {
+    bool? _isChecked = true;
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.teal.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ],
+        ),
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 1.0,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height * 0.3,
+        child: ListView(
+          children: [
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Checkbox(value: _isChecked, onChanged: (bool? value) {
+                      setState(() {
+                        _isChecked = value;
+                      });
+                    },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                    ),
+                    ElevatedButton(onPressed: () {}, child: Text('완료')),
+                  ],
+                )
+              ],
+            )
           ],
         ),
       ),
     );
   }
-}
 
-Widget carInspectionInfo(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.teal.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3),
-          )
+
+  Widget infoTable() {
+    return Padding(
+      padding: const EdgeInsets.all(1.0),
+      child: DataTable(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        border: TableBorder.all(),
+        columns: const [
+          DataColumn(label: Text('정기점검')),
+          DataColumn(label: Text('주행거리')),
+          DataColumn(label: Text('교체주기')),
+        ],
+        rows: const [
+          DataRow(cells: [
+            DataCell(Text('미션오일')),
+            DataCell(Text('100,000km')),
+            DataCell(Text('2024-10-19')),
+          ]),
+          DataRow(cells: [
+            DataCell(Text('엔진오일')),
+            DataCell(Text(
+              '광유:7,000~10,000km 합성유: 10,000~15,000km',
+              style: TextStyle(fontSize: 7),
+            )),
+            DataCell(Text('2024-10-19')),
+          ]),
+          DataRow(cells: [
+            DataCell(Text('브레이크 오일')),
+            DataCell(Text('50,000km')),
+            DataCell(Text('2024-10-19')),
+          ]),
         ],
       ),
-      width: MediaQuery.of(context).size.width * 1.0,
-      height: MediaQuery.of(context).size.height * 0.25,
-    ),
-  );
-}
+    );
+  }
 
-Widget infoTable() {
-  return Padding(
-    padding: const EdgeInsets.all(1.0),
-    child: DataTable(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      border: TableBorder.all(),
-      columns: const [
-        DataColumn(label: Text('정기점검')),
-        DataColumn(label: Text('주행거리')),
-        DataColumn(label: Text('교체주기')),
+  Widget carInspectionListInfo(String title, Color backgroundColor) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 90,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            color: backgroundColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
       ],
-      rows: const [
-        DataRow(cells: [
-          DataCell(Text('미션오일')),
-          DataCell(Text('100,000km')),
-          DataCell(Text('2024-10-19')),
-        ]),
-        DataRow(cells: [
-          DataCell(Text('엔진오일')),
-          DataCell(Text(
-            '광유:7,000~10,000km 합성유: 10,000~15,000km',
-            style: TextStyle(fontSize: 7),
-          )),
-          DataCell(Text('2024-10-19')),
-        ]),
-        DataRow(cells: [
-          DataCell(Text('브레이크 오일')),
-          DataCell(Text('50,000km')),
-          DataCell(Text('2024-10-19')),
-        ]),
-      ],
-    ),
-  );
+    );
+  }
 }
-
-
