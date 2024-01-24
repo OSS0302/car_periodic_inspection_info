@@ -34,16 +34,15 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
               border: Border.all(),
             ),
             child: TabBar(
-
               indicatorColor: Colors.blue,
               indicatorWeight: 1,
               isScrollable: true,
               tabs: [
-                tabInfo(context,'핸들오일'),
-                tabInfo(context,'엔진오일'),
-                tabInfo(context,'브레이크오일'),
-                tabInfo(context,'와이퍼'),
-                tabInfo(context,''),
+                tabInfo(context, '핸들오일'),
+                tabInfo(context, '엔진오일'),
+                tabInfo(context, '브레이크오일'),
+                tabInfo(context, '와이퍼'),
+                tabInfo(context, '와이퍼'),
               ],
               indicator: BoxDecoration(
                 shape: BoxShape.circle,
@@ -67,51 +66,11 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '핸들오일',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '미션오일',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '엔진오일',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '브레이크 오일',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '브레이크 오일',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                ),
+                tabViewInfo(''),
+                tabViewInfo(''),
+                tabViewInfo(''),
+                tabViewInfo(''),
+                tabViewInfo(''),
               ],
             ),
           ),
@@ -120,7 +79,8 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
     );
   }
 }
- Widget tabInfo(BuildContext context ,String title) {
+
+Widget tabInfo(BuildContext context, String title) {
   return Container(
     height: MediaQuery.of(context).size.height * 0.06,
     alignment: Alignment.center,
@@ -128,4 +88,16 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
       title,
     ),
   );
- }
+}
+
+Widget tabViewInfo(String content) {
+  return Container(
+    alignment: Alignment.center,
+    child: Text(
+      content,
+      style: TextStyle(
+        fontSize: 30,
+      ),
+    ),
+  );
+}
