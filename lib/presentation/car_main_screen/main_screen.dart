@@ -2,7 +2,6 @@ import 'package:animation_list/animation_list.dart';
 import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
-import 'package:car_periodic_inspection_info/presentation/ui/slide_panel.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
@@ -24,8 +23,11 @@ class _MainScreenState extends State<MainScreen> {
       body: Column(
         children: [
           carInspectionInfo(context),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           infoTable(),
+          SizedBox(height: 5,),
           Center(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.1,
@@ -35,8 +37,7 @@ class _MainScreenState extends State<MainScreen> {
                   // 시간될떄 고라우터 로 리펙토링 하기
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const TabPage()),
+                    MaterialPageRoute(builder: (context) => const TabPage()),
                   );
                 },
                 child: AnimationList(
@@ -49,13 +50,13 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
+
         ],
       ),
     );
   }
 
   Widget carInspectionInfo(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Container(
@@ -76,14 +77,16 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      decoration: BoxDecoration(
-
-                      ),
-                      child: Text('공지사항',style: TextStyle(fontSize: 30),)),
+                      decoration: const BoxDecoration(),
+                      child: Text(
+                        '공지사항',
+                        style: TextStyle(fontSize: 30),
+                      )),
                 ),
                 mainBoard('미션오일'),
                 mainBoard('엔진오일'),
@@ -100,14 +103,14 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget mainBoard( String title) {
+  Widget mainBoard(String title) {
     bool? _isChecked = false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Checkbox(
           checkColor: Colors.green,
-          shape:  RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
           value: _isChecked,
@@ -120,17 +123,18 @@ class _MainScreenState extends State<MainScreen> {
         Container(
           child: Text(
             title,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
-        ElevatedButton(onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CarInfoAddScreen()),
-          );
-        }, child: Text('완료')),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CarInfoAddScreen()),
+              );
+            },
+            child: Text('완료')),
       ],
     );
   }
@@ -181,7 +185,6 @@ class _MainScreenState extends State<MainScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(),
-            
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             color: backgroundColor,
           ),
@@ -192,6 +195,7 @@ class _MainScreenState extends State<MainScreen> {
                 title,
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
+
             ],
           ),
         ),
