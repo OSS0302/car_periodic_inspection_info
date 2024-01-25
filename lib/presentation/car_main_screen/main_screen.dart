@@ -1,5 +1,7 @@
 import 'package:animation_list/animation_list.dart';
 import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
+import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
+import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:car_periodic_inspection_info/presentation/ui/slide_panel.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -24,28 +26,26 @@ class _MainScreenState extends State<MainScreen> {
           carInspectionInfo(context),
           SizedBox(height: 5,),
           infoTable(),
-          Expanded(
-            child: Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.95,
-                child: InkWell(
-                  onTap: () {
-                    // 시간될떄 고라우터 로 리펙토링 하기
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PanelScreen()),
-                    );
-                  },
-                  child: AnimationList(
-                      duration: 1000,
-                      reBounceDepth: 30,
-                      children: data.map((item) {
-                        return carInspectionListInfo(
-                            item['title'], item['backgroundColor']);
-                      }).toList()),
-                ),
+          Center(
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.1,
+              width: MediaQuery.of(context).size.width * 0.95,
+              child: InkWell(
+                onTap: () {
+                  // 시간될떄 고라우터 로 리펙토링 하기
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TabPage()),
+                  );
+                },
+                child: AnimationList(
+                    duration: 1500,
+                    reBounceDepth: 30,
+                    children: data.map((item) {
+                      return carInspectionListInfo(
+                          item['title'], item['backgroundColor']);
+                    }).toList()),
               ),
             ),
           ),
@@ -80,10 +80,10 @@ class _MainScreenState extends State<MainScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    decoration: BoxDecoration(
+                      decoration: BoxDecoration(
 
-                    ),
-                      child: Text('공지사항',style: TextStyle(fontSize: 30,backgroundColor: Colors.blue),)),
+                      ),
+                      child: Text('공지사항',style: TextStyle(fontSize: 30),)),
                 ),
                 mainBoard('미션오일'),
                 mainBoard('엔진오일'),
@@ -118,7 +118,6 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
         Container(
-
           child: Text(
             title,
             style: TextStyle(
@@ -126,7 +125,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         ElevatedButton(onPressed: () {
-
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CarInfoAddScreen()),
+          );
         }, child: Text('완료')),
       ],
     );
@@ -177,11 +180,13 @@ class _MainScreenState extends State<MainScreen> {
           height: 90,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
+            border: Border.all(),
+            
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             color: backgroundColor,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 title,
