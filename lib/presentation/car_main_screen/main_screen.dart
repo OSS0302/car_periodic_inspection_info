@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
           SizedBox(
             height: 5,
           ),
-          infoTable(),
+          CarInfoTable(),
           SizedBox(height: 5,),
           Center(
             child: Container(
@@ -139,40 +139,58 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget infoTable() {
+  Widget CarInfoTable() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: DataTable(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.teal.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ],
         ),
-        border: TableBorder.all(),
-        columns: const [
-          DataColumn(label: Text('정기점검')),
-          DataColumn(label: Text('주행거리')),
-          DataColumn(label: Text('교체주기')),
-        ],
-        rows: const [
-          DataRow(cells: [
-            DataCell(Text('미션오일')),
-            DataCell(Text('100,000km')),
-            DataCell(Text('2024-10-19')),
-          ]),
-          DataRow(cells: [
-            DataCell(Text('엔진오일')),
-            DataCell(Text(
-              '광유:7,000~10,000km 합성유: 10,000~15,000km',
-              style: TextStyle(fontSize: 7),
-            )),
-            DataCell(Text('2024-10-19')),
-          ]),
-          DataRow(cells: [
-            DataCell(Text('브레이크 오일')),
-            DataCell(Text('50,000km')),
-            DataCell(Text('2024-10-19')),
-          ]),
-        ],
+        width: MediaQuery.of(context).size.width * 1.0,
+        height: MediaQuery.of(context).size.height * 0.3,
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      decoration: const BoxDecoration(),
+                      child: Text(
+                        '메인 보드 ',
+                        style: TextStyle(fontSize: 30),
+                      )),
+                  ),
+                mainCarInfo('엔진오일', '10000km', '점검완료'),
+                mainCarInfo('브레이크오일', '20000km', '점검완료'),
+                mainCarInfo('브레이크패드', '30000km', '점검완료'),
+                mainCarInfo('미션오일', '40000km', '점검완료'),
+              ],
+            )
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget mainCarInfo(String title, String content, String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text (title),
+        Text (content),
+        Text (text),
+      ],
     );
   }
 
@@ -181,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         Container(
           width: double.infinity,
-          height: 90,
+          height: 70,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(),
@@ -195,7 +213,6 @@ class _MainScreenState extends State<MainScreen> {
                 title,
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-
             ],
           ),
         ),
