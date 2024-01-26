@@ -57,7 +57,7 @@ class CarPeriodic with _$CarPeriodic {
     // 23.  에어컨 냉매점검
     @Default("") String airConditionerRefrigerantInspection,
     // 24. 파워 스티어링
-    @Default("") String PowerSteeringOil,
+    @Default("") String powerSteeringOil,
     // 25. 바퀴 정렬
     @Default("") String wheelAlignment,
     // 26 밧데리
@@ -69,4 +69,5 @@ class CarPeriodic with _$CarPeriodic {
   }) = _CarPeriodic;
 
   factory CarPeriodic.fromJson(Map<String, Object?> json) => _$CarPeriodicFromJson(json);
+
 }

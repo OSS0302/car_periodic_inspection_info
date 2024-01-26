@@ -1,3 +1,4 @@
+import 'package:car_periodic_inspection_info/presentation/tab_screen/tab_info.dart';
 import 'package:flutter/material.dart';
 
 class TabPage extends StatefulWidget {
@@ -35,14 +36,14 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
             ),
             child: TabBar(
               indicatorColor: Colors.blue,
-              indicatorWeight: 1,
+              indicatorWeight: 2,
               isScrollable: true,
               tabs: [
-                tabInfo(context, '핸들오일'),
                 tabInfo(context, '엔진오일'),
+                tabInfo(context, '핸들오일'),
                 tabInfo(context, '브레이크오일'),
                 tabInfo(context, '와이퍼'),
-                tabInfo(context, '와이퍼'),
+                tabInfo(context, '냉각수'),
               ],
               indicator: BoxDecoration(
                 shape: BoxShape.circle,
@@ -52,8 +53,8 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors.purpleAccent,
-                    Colors.greenAccent,
+                    Colors.blueAccent,
+                    Colors.black,
                   ],
                 ),
               ),
@@ -66,7 +67,7 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                tabViewInfo(''),
+                tabViewInfo(engineOil),
                 tabViewInfo(''),
                 tabViewInfo(''),
                 tabViewInfo(''),
@@ -96,7 +97,7 @@ Widget tabViewInfo(String content) {
     child: Text(
       content,
       style: TextStyle(
-        fontSize: 30,
+        fontSize: 20,
       ),
     ),
   );

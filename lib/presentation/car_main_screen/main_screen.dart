@@ -1,12 +1,13 @@
 import 'package:animation_list/animation_list.dart';
 import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
+import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
+
   const MainScreen({super.key});
 
   @override
@@ -14,22 +15,37 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: const Text('아반떼 000님 환영 합니다. '),
       ),
       body: Column(
         children: [
           carInspectionInfo(context),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
-          CarInfoTable(),
-          SizedBox(height: 5,),
+          carInfoTable(),
+          const SizedBox(height: 5),
           Center(
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.1,
               width: MediaQuery.of(context).size.width * 0.95,
               child: InkWell(
@@ -50,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-
+          Expanded(child: Container()),
         ],
       ),
     );
@@ -83,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                       decoration: const BoxDecoration(),
-                      child: Text(
+                      child: const Text(
                         '공지사항',
                         style: TextStyle(fontSize: 30),
                       )),
@@ -104,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget mainBoard(String title) {
-    bool? _isChecked = false;
+    bool? isChecked = false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -113,18 +129,16 @@ class _MainScreenState extends State<MainScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          value: _isChecked,
+          value: isChecked,
           onChanged: (bool? value) {
             setState(() {
-              _isChecked = value;
+              isChecked = value;
             });
           },
         ),
-        Container(
-          child: Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         ElevatedButton(
             onPressed: () {
@@ -134,12 +148,13 @@ class _MainScreenState extends State<MainScreen> {
                     builder: (context) => const CarInfoAddScreen()),
               );
             },
-            child: Text('완료')),
+            child: const Text('완료')),
       ],
     );
   }
 
-  Widget CarInfoTable() {
+  Widget carInfoTable() {
+    final viewModel = context.watch<MainViewModel>();
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Container(
@@ -166,12 +181,12 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                       decoration: const BoxDecoration(),
-                      child: Text(
+                      child: const Text(
                         '메인 보드 ',
                         style: TextStyle(fontSize: 30),
                       )),
                   ),
-                mainCarInfo('엔진오일', '10000km', '점검완료'),
+                Text(viewModel.fetchMainInfoData().toString()),
                 mainCarInfo('브레이크오일', '20000km', '점검완료'),
                 mainCarInfo('브레이크패드', '30000km', '점검완료'),
                 mainCarInfo('미션오일', '40000km', '점검완료'),
@@ -211,7 +226,7 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
             ],
           ),

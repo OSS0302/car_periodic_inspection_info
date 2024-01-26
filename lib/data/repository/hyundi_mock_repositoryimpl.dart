@@ -6,7 +6,7 @@ class CarInfoRepositoryImpl implements CarPeriodicRepository {
   Future<CarPeriodic> getCarInfo() async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final Map<String, dynamic> getCarInfo() = [
+  [
       {
         "maintenanceItems": {
           "engineOil": {
@@ -77,7 +77,8 @@ class CarInfoRepositoryImpl implements CarPeriodicRepository {
           }
         }
       }
-    ] ;
+    ];
+    return CarPeriodic();
   }
 
 
