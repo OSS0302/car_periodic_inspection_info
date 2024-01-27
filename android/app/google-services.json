@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1093834949187",
+    "project_id": "carperiodicinspectioninfo",
+    "storage_bucket": "carperiodicinspectioninfo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093834949187:android:446c18c1a7799799518af6",
+        "android_client_info": {
+          "package_name": "com.ssOh.car_periodic_inspection_info"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH4ALasNW62jdgjcUn6xtNH-sJGLg1mfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
