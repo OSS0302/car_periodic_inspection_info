@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class MainViewModel extends ChangeNotifier {
   CarPeriodicRepository _repository;
   bool _isLoading = false;
-
+  bool? isChecked = false;
   bool get isLoading => _isLoading;
 
   MainViewModel({

@@ -120,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget mainBoard(String title) {
-    bool? isChecked = false;
+    final viewModel = context.watch<MainViewModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -129,10 +129,10 @@ class _MainScreenState extends State<MainScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          value: isChecked,
+          value: viewModel.isChecked,
           onChanged: (bool? value) {
             setState(() {
-              isChecked = value;
+              viewModel.isChecked = value;
             });
           },
         ),
