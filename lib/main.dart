@@ -1,11 +1,8 @@
 
-import 'package:car_periodic_inspection_info/data/repository/hyundi_mock_repositoryimpl.dart';
 import 'package:car_periodic_inspection_info/firebase_options.dart';
-import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
-import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
+import 'package:car_periodic_inspection_info/presentation/ui/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 
@@ -23,16 +20,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ChangeNotifierProvider(
-        create: (_) => MainViewModel(repository: CarInfoRepositoryImpl()),
-        child: const MainScreen(),
-      )
+
+
     );
   }
 }

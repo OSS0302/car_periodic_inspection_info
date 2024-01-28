@@ -4,6 +4,7 @@ import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/ca
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -141,13 +142,7 @@ class _MainScreenState extends State<MainScreen> {
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CarInfoAddScreen()),
-              );
-            },
+            onPressed: () => context.go('/addInfoScreen'),
             child: const Text('완료')),
       ],
     );
@@ -186,7 +181,6 @@ class _MainScreenState extends State<MainScreen> {
                         style: TextStyle(fontSize: 30),
                       )),
                   ),
-                Text(viewModel.fetchMainInfoData().toString()),
                 mainCarInfo('브레이크오일', '20000km', '점검완료'),
                 mainCarInfo('브레이크패드', '30000km', '점검완료'),
                 mainCarInfo('미션오일', '40000km', '점검완료'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CarInfoAddScreen extends StatefulWidget {
 
@@ -157,9 +158,8 @@ Widget buttom (BuildContext context) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        ElevatedButton(onPressed: () {
-          () =>  Navigator.pop(context);
-        } , child: Text('완료')),
+        ElevatedButton(onPressed: () => context.go('/'),
+            child: Text('완료')),
       ],
     ),
   );
