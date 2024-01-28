@@ -1,5 +1,6 @@
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -27,13 +28,9 @@ class SignUpScreen extends StatelessWidget {
             SizedBox(
               width: 200,
               height: 60,
-                child: FloatingActionButton(onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen()),
-                  );
-                } ,child: Text('가입 완료',style: TextStyle(fontSize: 30),),))
+                child: FloatingActionButton(onPressed: () => context.go('/mainScreen'),
+
+                  child: Text('가입 완료',style: TextStyle(fontSize: 30),),))
           ],
         ),
       ),

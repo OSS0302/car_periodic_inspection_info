@@ -1,6 +1,7 @@
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -20,7 +21,7 @@ class SignInScreen extends StatelessWidget {
             children: [
               Image.network(
                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjIfxtJWjgQh0Q_MNtzM9PnnKK6_Otv1X71g&usqp=CAU'),
-              Text('로그인',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 40),),
+              const Text('로그인',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 40),),
               input('이메일'),
               SizedBox(height: 10,),
               input('패스워드'),
@@ -66,13 +67,9 @@ Widget buttomWidget (BuildContext context) {
       Container(
         width: 300,
         height: 30,
-          child: ElevatedButton(onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainScreen()),
-            );
-          }, child: Text('로그인'))),
+          child: ElevatedButton(onPressed: () => context.go('/mainScreen'),
+
+          child: Text('로그인'))),
       Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
