@@ -14,7 +14,7 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
   @override
   void initState() {
     _tabController = TabController(
-      length: 5,
+      length: 6,
       vsync: this, //vsync에 this 형태로 전달해야 애니메이션이 정상 처리됨
     );
     super.initState();
@@ -39,6 +39,7 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
               indicatorWeight: 2,
               isScrollable: true,
               tabs: [
+                tabInfo(context, '내차량 최근  보기 '),
                 tabInfo(context, '엔진오일'),
                 tabInfo(context, '핸들오일'),
                 tabInfo(context, '브레이크오일'),
@@ -46,8 +47,8 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
                 tabInfo(context, '냉각수'),
               ],
               indicator: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(16),
                 gradient: LinearGradient(
                   //배경 그라데이션 적용
                   begin: Alignment.centerLeft,
@@ -67,6 +68,7 @@ class _TabPageState extends State<TabPage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
+                tabViewInfo(''),
                 tabViewInfo(engineOil),
                 tabViewInfo(''),
                 tabViewInfo(''),
