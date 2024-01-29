@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CarInfoAddScreen extends StatefulWidget {
-
   const CarInfoAddScreen({super.key});
 
   @override
@@ -34,12 +33,10 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
           const SizedBox(
             height: 10,
           ),
-          textInput(),
           carInspectionInput(),
-          buttom(context),
+           buttom(context),
         ],
       ),
-
     );
   }
 }
@@ -63,103 +60,66 @@ Widget dropDownMenu() {
   );
 }
 
-Widget textInput() {
-  return const Column(
-    children: [
-      Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: '제조회사',
-                  border: OutlineInputBorder(
-                  ),
-                ),
-
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: '차량선택',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),Expanded(
-              flex: 1,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: '연료유형',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
 Widget carInspectionInput() {
-  return const Column(
-    children: [
-      Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: '제조회사',
-                  border: OutlineInputBorder(
-                  ),
-                ),
-
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: '점검한 km 입력',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),Expanded(
-              flex: 1,
-              child: TextField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: '점검날짜',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ],
+  return const Padding(
+    padding: EdgeInsets.all(8.0),
+    child: Column(
+      children: [
+        TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: '제조회사',
+            border: OutlineInputBorder(),
+          ),
         ),
-      ),
-    ],
+        SizedBox(height: 10,),
+        TextField(
+          decoration: InputDecoration(
+            hintText: '차량선택',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10,),
+        TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: '연료유형',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10,),
+        TextField(
+          decoration: InputDecoration(
+            hintText: '주행한 키로수',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10,),
+        TextField(
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: '점검한 날짜',
+            border: OutlineInputBorder(),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
-Widget buttom (BuildContext context) {
+
+
+
+Widget buttom(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(onPressed: () => context.go('/'),
-            child: Text('완료')),
+        Container(
+          width: 300,
+          height: 50,
+            child: ElevatedButton(onPressed: () => context.go('/mainScreen'), child: Text('작성 완료'))),
       ],
     ),
   );
