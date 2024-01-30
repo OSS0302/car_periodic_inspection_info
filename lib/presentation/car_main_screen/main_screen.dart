@@ -34,7 +34,6 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
         title: const Text('아반떼 000님 환영 합니다. '),
       ),
       body: Column(
@@ -45,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           carInfoTable(),
           const SizedBox(height: 5),
-          Center(
+          Expanded(
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.1,
               width: MediaQuery.of(context).size.width * 0.95,
@@ -67,7 +66,6 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-          Expanded(child: Container()),
         ],
       ),
     );
@@ -90,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.3,
+        height: MediaQuery.of(context).size.height * 0.25,
         child: ListView(
           children: [
             Column(
@@ -166,7 +164,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.3,
+        height: MediaQuery.of(context).size.height * 0.25,
         child: ListView(
           children: [
             Column(
