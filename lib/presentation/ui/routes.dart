@@ -1,4 +1,5 @@
 import 'package:car_periodic_inspection_info/data/repository/hyundi_mock_repositoryimpl.dart';
+import 'package:car_periodic_inspection_info/presentation/battom_navi.dart';
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
@@ -16,7 +17,7 @@ final GoRouter router = GoRouter(
       path: '/mainScreen',
       builder: (context, state) => ChangeNotifierProvider(
         create: (_) => MainViewModel(repository: CarInfoRepositoryImpl()),
-        child: MainScreen(),
+        child:  BottomNaviScreen(),
       ),
     ),
     GoRoute(
@@ -34,8 +35,9 @@ final GoRouter router = GoRouter(
     ),GoRoute(
       path: '/signUpScreen',
       builder: (BuildContext context, GoRouterState state) {
-        return  const SignUpScreen();
-      },
-    ),
+        return const SignUpScreen();
+      }),
+
+
   ],
 );
