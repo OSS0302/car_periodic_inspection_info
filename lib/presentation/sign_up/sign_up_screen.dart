@@ -115,10 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     final AuthResponse res = await supabase.auth.signUp(
                       email: idController.text,
                       password: pwController.text,
-                      data: {
-                        'username': nameController.text,
-                        'phonenumber': phoneController.text,
-                      },
+                     
                     );
                   },
                   child: Text(
