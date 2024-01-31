@@ -1,4 +1,3 @@
-import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -111,12 +110,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 60,
                 child: FloatingActionButton(
                   onPressed: () async {
-                    context.go('/mainScreen');
+                    context.go('/');
                     final AuthResponse res = await supabase.auth.signUp(
-                      email: idController.text,
-                      password: pwController.text,
-                     
-                    );
+                        email: idController.text,
+                        password: pwController.text,
+                        data: {
+                          'name': nameController.text,
+                          'phone': nameController.text,
+                        });
+                    if(res.user != null) {
+                      await supabase.from('user_info').insert({
+                        'name': nameController.text,
+                        'phone': phoneController.text,
+                      });
+                    }
                   },
                   child: Text(
                     '가입 완료',
