@@ -1,9 +1,9 @@
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
-import 'package:car_periodic_inspection_info/presentation/my_page.dart';
-import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:flutter/material.dart';
+
+import 'my_page/my_page_screen.dart';
 
 class BottomNaviScreen extends StatefulWidget {
   const BottomNaviScreen({super.key});
@@ -18,7 +18,7 @@ class _BottomNaviScreenState extends State<BottomNaviScreen> {
     const MainScreen(),
     const CarInfoAddScreen(),
     const TabPage(),
-     MyPage(),
+    const MyPageScreen(),
 
   ];
 
