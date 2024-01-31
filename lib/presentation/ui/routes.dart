@@ -4,6 +4,7 @@ import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/ca
 import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
+import 'package:car_periodic_inspection_info/presentation/my_page/my_page_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
@@ -37,7 +38,12 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const SignUpScreen();
       }),
-
+    GoRoute(
+      path: '/MyPageScreen',
+      builder: (BuildContext context, GoRouterState state) {
+        return  MyPageScreen();
+      },
+    ),
 
   ],
 );
