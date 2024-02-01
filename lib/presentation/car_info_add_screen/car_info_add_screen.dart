@@ -14,7 +14,8 @@ class CarInfoAddScreen extends StatefulWidget {
 
 class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   final stream = supabase.from('user_info').stream(primaryKey: ['id']);
-
+  bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
   TextEditingController companyController = TextEditingController();
   TextEditingController carSelectController = TextEditingController();
   TextEditingController gasSelectController = TextEditingController();
@@ -30,6 +31,18 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
     dateController.dispose();
     super.dispose();
   }
+  void validateAndSubmit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      context.go('/mainScreen');
+      await supabase.from('car_periodic_add').insert({
+        'company': companyController.text ?? '',
+        'car_select': carSelectController.text ?? '',
+        'gas_select': gasSelectController.text ?? '',
+        'distance': distanceController.text ?? '',
+        'date': DateFormat("yyyy-MM-dd ").format(DateTime.now()),
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,76 +55,95 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         padding: const EdgeInsets.all(12.0),
         child: ListView(
           children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40)),
-                        child: dropDownMenu()),
-                  ],
-                ),
-                TextField(
-                  controller: companyController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    hintText: '제조회사',
-                    border: OutlineInputBorder(),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40)),
+                          child: dropDownMenu()),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: carSelectController,
-                  decoration: InputDecoration(
-                    hintText: '차량선택',
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '제조 회사를 입력 해 주세요';
+                      }
+                      return null;
+                    },
+                    controller: companyController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: '제조회사',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: gasSelectController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    hintText: '연료유형',
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: distanceController,
-                  decoration: InputDecoration(
-                    hintText: '주행한 키로수',
-                    border: OutlineInputBorder(),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '차량 선택하세요';
+                      }
+                      return null;
+                    },
+                    controller: carSelectController,
+                    decoration: InputDecoration(
+                      hintText: '차량선택',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '차량 선택하세요';
+                      }
+                      return null;
+                    },
+                    controller: gasSelectController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: '연료유형',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '차량 선택하세요';
+                      }
+                      return null;
+                    },
+                    controller: distanceController,
+                    decoration: InputDecoration(
+                      hintText: '주행한 키로수',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
 
-                Container(
-                    width: 300,
-                    height: 50,
-                    child: ElevatedButton(
-                        onPressed: () async{
-                          context.go('/mainScreen');
-                          await supabase.from('car_periodic_add').insert({
-                            'company': companyController.text ?? '',
-                            'car_select':carSelectController.text ?? '',
-                            'gas_select': gasSelectController.text?? '',
-                            'distance':distanceController.text?? '',
-                            'date':  DateFormat("yyyy-MM-dd ").format(DateTime.now()),
-                          });
+                  Container(
+                      width: 300,
+                      height: 50,
+                      child: ElevatedButton(
+                          onPressed: validateAndSubmit,
 
-                        },
-                        child: Text('작성 완료'))),
-              ],
+
+                          child: Text('작성 완료'))),
+                ],
+              ),
             ),
           ],
         ),
