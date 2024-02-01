@@ -61,7 +61,7 @@ class _BottomNaviScreenState extends State<BottomNaviScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
-              activeIcon: Icon(Icons.coffee),
+              activeIcon: Icon(Icons.account_circle),
               label: '마이페이지',
             ),
           ],
