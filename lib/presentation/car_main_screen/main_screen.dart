@@ -1,72 +1,135 @@
 import 'package:animation_list/animation_list.dart';
 import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
-import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_screen.dart';
-import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final supabase = Supabase.instance.client;
 
 class MainScreen extends StatefulWidget {
-
-  const MainScreen({super.key});
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  TextEditingController controller = TextEditingController();
+  Stream<List<Map<String, dynamic>>>? _stream;
+  String? userUid;
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  bool _isLoading = false;
+  bool? isChecked = false;
+
   @override
   void initState() {
-
     super.initState();
+    getUserInfoUid().then((_) {
+      _stream = supabase
+          .from('car_periodic_add')
+          .stream(primaryKey: ['id'])
+
+          .eq('id', '$userUid');
+      setState(() {});
+    });
+  }
+
+  Future<void> getUserInfoUid() async {
+    final user = supabase.auth.currentUser;
+    setState(() {
+      userUid = user?.id;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('아반떼 000님 환영 합니다. '),
+        title: const Text('아반떼 000님 환영합니다.'),
       ),
-      body: Column(
-        children: [
-          carInspectionInfo(context),
-          const SizedBox(
-            height: 5,
-          ),
-          carInfoTable(),
-          const SizedBox(height: 5),
-          Expanded(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.1,
-              width: MediaQuery.of(context).size.width * 0.95,
-              child: InkWell(
-                onTap: () {
-                  // 시간될떄 고라우터 로 리펙토링 하기
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TabPage()),
-                  );
-                },
-                child: AnimationList(
-                    duration: 1500,
-                    reBounceDepth: 30,
-                    children: data.map((item) {
-                      return carInspectionListInfo(
-                          item['title'], item['backgroundColor']);
-                    }).toList()),
+      body: SafeArea(
+        child: Column(
+          children: [
+            carInspectionInfo(context),
+            const SizedBox(
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.teal.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    )
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width * 1.0,
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: _stream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final car = snapshot.data!;
+
+                    if (car.isEmpty) {
+                      return const Center(child: Text('데이터가 없습니다'));
+                    }
+
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.04,
+                      child: ListView.builder(
+                        itemCount: car.length,
+                        itemBuilder: (context, index) {
+                          final company = car[index];
+                          return ListTile(
+                            title: Text(company['company']),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 5),
+            Expanded(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width * 0.95,
+                child: InkWell(
+                  onTap: () {
+                    // 시간이 허락한다면 고라우터로 리팩토링하기
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TabPage(),
+                      ),
+                    );
+                  },
+                  child: AnimationList(
+                    duration: 1500,
+                    reBounceDepth: 30,
+                    children: listData
+                        .map((item) => carInspectionListInfo(
+                      item['title'],
+                      item['backgroundColor'],
+                    ))
+                        .toList(),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -88,7 +151,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: MediaQuery.of(context).size.height * 0.21,
         child: ListView(
           children: [
             Column(
@@ -111,7 +174,7 @@ class _MainScreenState extends State<MainScreen> {
                 mainBoard('엔진오일'),
                 mainBoard('엔진오일'),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -119,7 +182,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget mainBoard(String title) {
-    final viewModel = context.watch<MainViewModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -128,10 +190,10 @@ class _MainScreenState extends State<MainScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          value: viewModel.isChecked,
+          value: isChecked,
           onChanged: (bool? value) {
             setState(() {
-              viewModel.isChecked = value;
+              isChecked = value;
             });
           },
         ),
@@ -139,64 +201,13 @@ class _MainScreenState extends State<MainScreen> {
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        ElevatedButton(
-            onPressed: () => context.go('/addInfoScreen'),
-            child: const Text('완료')),
-      ],
-    );
-  }
-
-  Widget carInfoTable() {
-    final viewModel = context.watch<MainViewModel>();
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.teal.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            )
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ElevatedButton(
+            onPressed: () => context.push('/addInfoScreen'),
+            child: const Text('완료'),
+          ),
         ),
-        width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.25,
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: const BoxDecoration(),
-                      child: const Text(
-                        '메인 보드 ',
-                        style: TextStyle(fontSize: 30),
-                      )),
-                  ),
-                mainCarInfo('브레이크오일', '20000km', '점검완료'),
-                mainCarInfo('브레이크패드', '30000km', '점검완료'),
-                mainCarInfo('미션오일', '40000km', '점검완료'),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget mainCarInfo(String title, String content, String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text (title),
-        Text (content),
-        Text (text),
       ],
     );
   }
@@ -218,7 +229,10 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
