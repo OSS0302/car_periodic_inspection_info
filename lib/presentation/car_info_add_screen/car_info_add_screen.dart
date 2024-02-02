@@ -34,12 +34,14 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       context.go('/mainScreen');
+      DateTime koreaNow = DateTime.now().toUtc().add(Duration(hours: 9));
+
       await supabase.from('car_periodic_add').insert({
         'company': companyController.text ?? '',
         'car_select': carSelectController.text ?? '',
         'gas_select': gasSelectController.text ?? '',
         'distance': distanceController.text ?? '',
-        'date': DateFormat("yyyy-MM-dd ").format(DateTime.now()),
+        'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
       });
     }
   }
