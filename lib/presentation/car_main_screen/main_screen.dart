@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animation_list/animation_list.dart';
 import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
@@ -15,22 +17,31 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Stream<List<Map<String, dynamic>>>? _stream;
+  StreamSubscription? _streamSubscription;
+  List<Map<String, dynamic>> _data = [];
   String? userUid;
-
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool? isChecked = false;
 
-  @override
   void initState() {
     super.initState();
     getUserInfoUid().then((_) {
-      _stream = supabase
+      _streamSubscription = supabase
           .from('car_periodic_add')
           .stream(primaryKey: ['id'])
+          .eq('id', '$userUid')
+          .listen((data) {
+        setState(() {
+          _data = data;
+          _isLoading = false;
+        });
+      }, onError: (error) {
+        // 에러 처리
+        setState(() {
+          _isLoading = false;
+        });
 
-          .eq('id', '$userUid');
-      setState(() {});
+      });
     });
   }
 
@@ -39,6 +50,12 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       userUid = user?.id;
     });
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -51,9 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           children: [
             carInspectionInfo(context),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Container(
@@ -71,31 +86,26 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 width: MediaQuery.of(context).size.width * 1.0,
                 height: MediaQuery.of(context).size.height * 0.2,
-                child: StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: _stream,
+                child: StreamBuilder<List<Map<String, dynamic>>>( // 타입 수정
+                  stream: Stream.value(_data), // List<Map<String, dynamic>>에서 Stream 생성
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('에러: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('데이터가 없습니다.'));
+                    } else {
+                      List<Map<String, dynamic>> data = snapshot.data!;
+                      return Column(
+                        children: data
+                            .map((item) => Text(
+                          '제조회사: ${item['company']}',
+                          style: const TextStyle(fontSize: 20),
+                        ))
+                            .toList(),
+                      );
                     }
-
-                    final car = snapshot.data!;
-
-                    if (car.isEmpty) {
-                      return const Center(child: Text('데이터가 없습니다'));
-                    }
-
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.04,
-                      child: ListView.builder(
-                        itemCount: car.length,
-                        itemBuilder: (context, index) {
-                          final company = car[index];
-                          return ListTile(
-                            title: Text(company['company']),
-                          );
-                        },
-                      ),
-                    );
                   },
                 ),
               ),
@@ -120,9 +130,9 @@ class _MainScreenState extends State<MainScreen> {
                     reBounceDepth: 30,
                     children: listData
                         .map((item) => carInspectionListInfo(
-                      item['title'],
-                      item['backgroundColor'],
-                    ))
+                              item['title'],
+                              item['backgroundColor'],
+                            ))
                         .toList(),
                   ),
                 ),
