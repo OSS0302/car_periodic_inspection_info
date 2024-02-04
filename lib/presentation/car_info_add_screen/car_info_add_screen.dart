@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final supabase = Supabase.instance.client;
 
 class CarInfoAddScreen extends StatefulWidget {
-  const CarInfoAddScreen({super.key});
+  const CarInfoAddScreen({Key? key}) : super(key: key);
 
   @override
   State<CarInfoAddScreen> createState() => _CarInfoAddScreenState();
@@ -41,17 +41,19 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'company': companyController.text ?? '',
         'car_select': carSelectController.text ?? '',
         'gas_select': gasSelectController.text ?? '',
+        'car_number': carNumberController.text ?? '',
         'distance': distanceController.text ?? '',
         'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
-        'car_number': carNumberController.text ?? '',
+
       });
       context.go('/mainScreen', extra : {
         'company': companyController.text,
         'car_select': carSelectController.text,
         'gas_select': gasSelectController.text,
+        'car_number': carNumberController.text,
         'distance': distanceController.text,
         'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
-        'car_number': carNumberController.text,
+
       });
     }
   }
@@ -76,8 +78,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(40)),
-                          child: dropDownMenu()),
-                    ],
+                      ),],
                   ),
                   TextFormField(
                     validator: (value) {
@@ -136,7 +137,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
-                    controller: carNumberController,
+                    controller: distanceController,
                     decoration: InputDecoration(
                       hintText: '주행한 키로수',
                       border: OutlineInputBorder(),
@@ -152,7 +153,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
-                    controller: distanceController,
+                    controller: carNumberController,
                     decoration: InputDecoration(
                       hintText: '차량 번호 입력',
                       border: OutlineInputBorder(),
@@ -180,22 +181,3 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   }
 }
 
-Widget dropDownMenu() {
-  return const SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: DropdownMenu(
-        width: 200,
-        label: Text(' 차 선택 '),
-        dropdownMenuEntries: [
-          DropdownMenuEntry(value: Colors.orange, label: '1대'),
-          DropdownMenuEntry(value: Colors.green, label: '2대'),
-          DropdownMenuEntry(value: Colors.deepPurple, label: '3대'),
-          DropdownMenuEntry(value: Colors.yellow, label: '4대'),
-          DropdownMenuEntry(value: Colors.lime, label: '5대'),
-        ],
-      ),
-    ),
-  );
-}
