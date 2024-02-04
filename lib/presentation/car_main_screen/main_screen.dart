@@ -69,47 +69,7 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             carInspectionInfo(context),
             const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.teal.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    )
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width * 1.0,
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: StreamBuilder<List<Map<String, dynamic>>>( // 타입 수정
-                  stream: Stream.value(_data), // List<Map<String, dynamic>>에서 Stream 생성
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('에러: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('데이터가 없습니다.'));
-                    } else {
-                      List<Map<String, dynamic>> data = snapshot.data!;
-                      return Column(
-                        children: data
-                            .map((item) => Text(
-                          '제조회사: ${item['company']}',
-                          style: const TextStyle(fontSize: 20),
-                        ))
-                            .toList(),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
+            carInfo(),
             const SizedBox(height: 5),
             Expanded(
               child: SizedBox(
@@ -184,6 +144,53 @@ class _MainScreenState extends State<MainScreen> {
                 mainBoard('엔진오일'),
                 mainBoard('엔진오일'),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget carInfo() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.teal.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            )
+          ],
+        ),
+        width: MediaQuery.of(context).size.width * 1.0,
+        height: MediaQuery.of(context).size.height * 0.2,
+        child: ListView(
+          children: [
+            StreamBuilder<List<Map<String, dynamic>>>( // 타입 수정
+              stream:  supabase.from('car_periodic_add').stream(primaryKey: ['id']), // List<Map<String, dynamic>>에서 Stream 생성
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('에러: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('데이터가 없습니다.'));
+                } else {
+                  List<Map<String, dynamic>> data = snapshot.data!;
+                  return Column(
+                    children: data
+                        .map((item) => Text(
+                      '제조회사: ${item['company']}',
+                      style: const TextStyle(fontSize: 20),
+                    ))
+                        .toList(),
+                  );
+                }
+              },
             ),
           ],
         ),
