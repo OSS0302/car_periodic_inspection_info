@@ -21,6 +21,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   TextEditingController gasSelectController = TextEditingController();
   TextEditingController distanceController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController carNumberController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
     gasSelectController.dispose();
     distanceController.dispose();
     dateController.dispose();
+    carNumberController.dispose();
     super.dispose();
   }
 
@@ -41,6 +43,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'gas_select': gasSelectController.text ?? '',
         'distance': distanceController.text ?? '',
         'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
+        'car_number': carNumberController.text ?? '',
       });
       context.go('/mainScreen', extra : {
         'company': companyController.text,
@@ -48,6 +51,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'gas_select': gasSelectController.text,
         'distance': distanceController.text,
         'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
+        'car_number': carNumberController.text,
       });
     }
   }
@@ -132,9 +136,25 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
-                    controller: distanceController,
+                    controller: carNumberController,
                     decoration: InputDecoration(
                       hintText: '주행한 키로수',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '차량 번호 입력해주세요';
+                      }
+                      return null;
+                    },
+                    controller: distanceController,
+                    decoration: InputDecoration(
+                      hintText: '차량 번호 입력',
                       border: OutlineInputBorder(),
                     ),
                   ),
