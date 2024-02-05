@@ -24,12 +24,14 @@ class _MainScreenState extends State<MainScreen> {
   bool? isChecked = false;
 
   void initState() {
+    setState(() {});
     super.initState();
     getUserInfoUid().then((_) {
       _streamSubscription = supabase
           .from('car_periodic_add')
           .stream(primaryKey: ['id'])
           .eq('id', '$userUid')
+          .order('date',ascending: false)
           .listen((data) {
             setState(() {
               _data = data;
@@ -42,6 +44,7 @@ class _MainScreenState extends State<MainScreen> {
             });
           });
     });
+    setState(() {});
   }
 
   Future<void> getUserInfoUid() async {
@@ -151,76 +154,71 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget carInfo() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.teal.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3),
-            )
-          ],
-        ),
-        width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.2,
-        child: ListView(
-          children: [
-            StreamBuilder<List<Map<String, dynamic>>>(
-              // 타입 수정
-              stream: supabase.from('car_periodic_add').stream(
-                  primaryKey: ['id']), // List<Map<String, dynamic>>에서 Stream 생성
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('에러: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('데이터가 없습니다.'));
-                } else {
-                  List<Map<String, dynamic>> data = snapshot.data!;
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('에러: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('데이터가 없습니다.'));
+        } else {
+          List<Map<String, dynamic>> data = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.teal.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              width: MediaQuery.of(context).size.width * 1.0,
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: ListView(
+                children: data.map((item) {
                   return Column(
-                    children: data.map((item) {
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '제조회사: ${item['company']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '차량선택: ${item['car_select']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '연료유형: ${item['gas_select']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '차량번호: ${item['car_number']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '주행거리: ${item['distance']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '점검 일자: ${item['date']}',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ]);
-                    }).toList(),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '제조회사: ${item['company']}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        '차량선택: ${item['car_select']}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        '연료유형: ${item['gas_select']}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        '차량번호: ${item['car_number']}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        '주행거리: ${item['distance']} a  km',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        '점검 일자: ${item['date']}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ],
                   );
-                }
-              },
+                }).toList(),
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 
@@ -247,8 +245,12 @@ class _MainScreenState extends State<MainScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ElevatedButton(
-            onPressed: () => context.push('/addInfoScreen'),
+            onPressed: () {
+              context.push('/addInfoScreen');
+              setState(() {});
+            },
             child: const Text('완료'),
+
           ),
         ),
       ],
