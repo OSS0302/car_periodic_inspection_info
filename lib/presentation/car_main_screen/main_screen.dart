@@ -31,17 +31,16 @@ class _MainScreenState extends State<MainScreen> {
           .stream(primaryKey: ['id'])
           .eq('id', '$userUid')
           .listen((data) {
-        setState(() {
-          _data = data;
-          _isLoading = false;
-        });
-      }, onError: (error) {
-        // 에러 처리
-        setState(() {
-          _isLoading = false;
-        });
-
-      });
+            setState(() {
+              _data = data;
+              _isLoading = false;
+            });
+          }, onError: (error) {
+            // 에러 처리
+            setState(() {
+              _isLoading = false;
+            });
+          });
     });
   }
 
@@ -150,6 +149,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
   Widget carInfo() {
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -170,8 +170,10 @@ class _MainScreenState extends State<MainScreen> {
         height: MediaQuery.of(context).size.height * 0.2,
         child: ListView(
           children: [
-            StreamBuilder<List<Map<String, dynamic>>>( // 타입 수정
-              stream:  supabase.from('car_periodic_add').stream(primaryKey: ['id']), // List<Map<String, dynamic>>에서 Stream 생성
+            StreamBuilder<List<Map<String, dynamic>>>(
+              // 타입 수정
+              stream: supabase.from('car_periodic_add').stream(
+                  primaryKey: ['id']), // List<Map<String, dynamic>>에서 Stream 생성
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -182,12 +184,36 @@ class _MainScreenState extends State<MainScreen> {
                 } else {
                   List<Map<String, dynamic>> data = snapshot.data!;
                   return Column(
-                    children: data
-                        .map((item) => Text(
-                      '제조회사: ${item['company']}',
-                      style: const TextStyle(fontSize: 20),
-                    ))
-                        .toList(),
+                    children: data.map((item) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '제조회사: ${item['company']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '차량선택: ${item['car_select']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '연료유형: ${item['gas_select']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '차량번호: ${item['car_number']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '주행거리: ${item['distance']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '점검 일자: ${item['date']}',
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ]);
+                    }).toList(),
                   );
                 }
               },
