@@ -1,9 +1,10 @@
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../sign_up/sign_up_screen.dart';
-
+final supabase = Supabase.instance.client;
 class SignInScreen extends StatefulWidget {
   SignInScreen({super.key});
 

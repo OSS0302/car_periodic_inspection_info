@@ -24,35 +24,38 @@ class _MainScreenState extends State<MainScreen> {
   bool? isChecked = false;
 
   void initState() {
-    setState(() {});
     super.initState();
-    getUserInfoUid().then((_) {
-      _streamSubscription = supabase
-          .from('car_periodic_add')
-          .stream(primaryKey: ['id'])
-          .eq('id', '$userUid')
-          .order('date',ascending: false)
-          .listen((data) {
-            setState(() {
-              _data = data;
-              _isLoading = false;
-            });
-          }, onError: (error) {
-            // 에러 처리
-            setState(() {
-              _isLoading = false;
-            });
-          });
-    });
-    setState(() {});
+    initializeUserInfoAndSubscribeToChanges();
   }
 
-  Future<void> getUserInfoUid() async {
+  Future<void> initializeUserInfoAndSubscribeToChanges() async {
     final user = supabase.auth.currentUser;
-    setState(() {
-      userUid = user?.id;
+    if (user != null) {
+      setState(() {
+        userUid = user.id;
+      });
+      subscribeToUserChanges(user.id);
+    }
+  }
+
+  void subscribeToUserChanges(String userId) {
+    _streamSubscription = supabase
+        .from('car_periodic_add')
+        .stream(primaryKey: ['id'])
+        .eq('uid', userId)
+        .order('date')
+        .listen((data) {
+      setState(() {
+        _data = data;
+        _isLoading = false;
+      });
+    }, onError: (error) {
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
+
 
   @override
   void dispose() {
@@ -155,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget carInfo() {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']),
+      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']).eq('uid', userUid!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -204,7 +207,7 @@ class _MainScreenState extends State<MainScreen> {
                         style: const TextStyle(fontSize: 20),
                       ),
                       Text(
-                        '주행거리: ${item['distance']} a  km',
+                        '주행거리: ${item['distance']} km',
                         style: const TextStyle(fontSize: 20),
                       ),
                       Text(

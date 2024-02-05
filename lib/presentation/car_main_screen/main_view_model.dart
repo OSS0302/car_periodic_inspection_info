@@ -3,9 +3,10 @@ import 'package:car_periodic_inspection_info/domain/repository/car_periodic_repo
 import 'package:flutter/material.dart';
 
 class MainViewModel extends ChangeNotifier {
-  CarPeriodicRepository _repository;
   bool _isLoading = false;
   bool? isChecked = false;
+  CarPeriodicRepository _repository;
+
   bool get isLoading => _isLoading;
 
   MainViewModel({

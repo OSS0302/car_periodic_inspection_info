@@ -15,7 +15,7 @@ class BottomNaviScreen extends StatefulWidget {
 class _BottomNaviScreenState extends State<BottomNaviScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-    const MainScreen(),
+     MainScreen(),
     const CarInfoAddScreen(),
     const TabPage(),
     const MyPageScreen(),

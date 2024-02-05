@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-List<Map<String, dynamic>> data = [
+List<Map<String, dynamic>> listData = [
   {
     'title': '현대',
     'backgroundColor': Colors.blue,

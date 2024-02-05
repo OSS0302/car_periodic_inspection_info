@@ -22,6 +22,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   TextEditingController distanceController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController carNumberController = TextEditingController();
+  String? userUid;
 
   @override
   void dispose() {
@@ -36,28 +37,31 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
 
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      DateTime koreaNow = DateTime.now().toUtc().add(Duration(hours: 9));
       await supabase.from('car_periodic_add').insert({
         'company': companyController.text ?? '',
         'car_select': carSelectController.text ?? '',
         'gas_select': gasSelectController.text ?? '',
         'car_number': carNumberController.text ?? '',
-        'distance': distanceController.text ?? '',
-        'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
-
+        'distance': distanceController.text ??'',
       });
+
       context.go('/mainScreen', extra : {
         'company': companyController.text,
         'car_select': carSelectController.text,
         'gas_select': gasSelectController.text,
         'car_number': carNumberController.text,
         'distance': distanceController.text,
-        'date': DateFormat("yyyy-MM-dd HH:mm").format(koreaNow),
-
       });
-    }
-  }
 
+    }
+
+  }
+  Future<void> initializeUserInfoAndSubscribeToChanges() async {
+    final user = supabase.auth.currentUser;
+      setState(() {
+        userUid = user?.id;
+      });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,8 +172,6 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       height: 50,
                       child: ElevatedButton(
                           onPressed: validateAndSubmit,
-
-
                           child: Text('작성 완료'))),
                 ],
               ),
