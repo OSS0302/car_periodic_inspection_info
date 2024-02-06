@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   bool _isLoading = true;
   bool? isChecked = false;
 
+  @override
   void initState() {
     super.initState();
     initializeUserInfoAndSubscribeToChanges();
@@ -76,33 +77,7 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 5),
             carInfo(),
             const SizedBox(height: 5),
-            Expanded(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.95,
-                child: InkWell(
-                  onTap: () {
-                    // 시간이 허락한다면 고라우터로 리팩토링하기
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TabPage(),
-                      ),
-                    );
-                  },
-                  child: AnimationList(
-                    duration: 1500,
-                    reBounceDepth: 30,
-                    children: listData
-                        .map((item) => carInspectionListInfo(
-                              item['title'],
-                              item['backgroundColor'],
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ),
-            ),
+            _buildTop(),
           ],
         ),
       ),
@@ -125,8 +100,14 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
-        width: MediaQuery.of(context).size.width * 1.0,
-        height: MediaQuery.of(context).size.height * 0.21,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 1.0,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height * 0.3,
         child: ListView(
           children: [
             Column(
@@ -158,7 +139,8 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget carInfo() {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']).eq('uid', userUid!),
+      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']).eq(
+          'uid', userUid!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -183,8 +165,14 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 1.0,
-              height: MediaQuery.of(context).size.height * 0.2,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 1.0,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.3,
               child: ListView(
                 children: data.map((item) {
                   return Column(
@@ -259,33 +247,97 @@ class _MainScreenState extends State<MainScreen> {
       ],
     );
   }
-
-  Widget carInspectionListInfo(String title, Color backgroundColor) {
+  Widget _buildTop() {
     return Column(
       children: [
-        Container(
-          width: double.infinity,
-          height: 70,
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: const BorderRadius.all(Radius.circular(25)),
-            color: backgroundColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+
+          ],
+        ),
+        SizedBox(height: 20,),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Container(
+                    width: 40,
+                    height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                    width: 40,
+                    height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                    width: 40,
+                    height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                    width: 40,
+                    height: 40,
+                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                Text('현대'),
+              ],
+            ),
+
+          ],
         ),
       ],
     );
   }
 }
+
+
