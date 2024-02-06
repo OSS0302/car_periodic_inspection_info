@@ -16,9 +16,8 @@ class _BottomNaviScreenState extends State<BottomNaviScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
      MainScreen(),
-    const CarInfoAddScreen(),
-    const TabPage(),
-    const MyPageScreen(),
+    const HyundaiScreen(),
+     MyPageScreen(),
 
   ];
 
@@ -49,13 +48,9 @@ class _BottomNaviScreenState extends State<BottomNaviScreen> {
               activeIcon: Icon(Icons.home),
               label: '메인',
             ),
+
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_outlined),
-              activeIcon: Icon(Icons.add_box),
-              label: '차량 입력',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.car_crash_sharp),
+              icon: Icon(Icons.car_crash_outlined),
               activeIcon: Icon(Icons.car_crash_sharp),
               label: '차량 정보',
             ),
