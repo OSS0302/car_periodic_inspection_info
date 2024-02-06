@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:animation_list/animation_list.dart';
-import 'package:car_periodic_inspection_info/data/repository/mock_List_repository_impl.dart';
-import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -198,8 +197,7 @@ class _MainScreenState extends State<MainScreen> {
                         '주행거리: ${item['distance']} km',
                         style: const TextStyle(fontSize: 20),
                       ),
-                      Text(
-                        '점검 일자: ${item['date']}',
+                      Text(DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9))),
                         style: const TextStyle(fontSize: 20),
                       ),
                     ],
@@ -253,42 +251,54 @@ class _MainScreenState extends State<MainScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                    child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
-                Text('현대'),
-              ],
+            InkWell(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                      child: Image.network('http://wiki.hash.kr/images/2/2b/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%E3%88%9C_%EB%A1%9C%EA%B3%A0.png',)),
+                  Text('현대'),
+                ],
+              ),
             ),
-            Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                    child: Image.network('https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F01%2Fkia-motors-new-logo-brand-slogan-officially-revealed-01.jpg?cbr=1&q=90',)),
-                Text('기아'),
-              ],
+            InkWell(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                      child: Image.network('https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F01%2Fkia-motors-new-logo-brand-slogan-officially-revealed-01.jpg?cbr=1&q=90',)),
+                  Text('기아'),
+                ],
+              ),
             ),
-            Column(
-              children: [
-                Container(
+            InkWell(
+                onTap: () {},
+              child: Column(
+                children: [
+                  Container(
 
-                  width: 50,
-                  height: 50,
-                    child: Image.network('https://tago.kr/images/sub/TG300-D00-img52.jpg',)),
-                Text('쌍용'),
-              ],
+                    width: 50,
+                    height: 50,
+                      child: Image.network('https://tago.kr/images/sub/TG300-D00-img52.jpg',)),
+                  Text('쌍용'),
+                ],
+              ),
             ),
-            Column(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                    child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-qoM9XlDnnzhQDBmFlKTfgUNkUaAowC7gYjStMmvzl5rshhjQ8yNzNIVqxDOx78TPX4&usqp=CAU',)),
-                Text('로노삼성'),
-              ],
+            InkWell(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                      child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-qoM9XlDnnzhQDBmFlKTfgUNkUaAowC7gYjStMmvzl5rshhjQ8yNzNIVqxDOx78TPX4&usqp=CAU',)),
+                  Text('로노삼성'),
+                ],
+              ),
             ),
           ],
         ),
@@ -296,46 +306,62 @@ class _MainScreenState extends State<MainScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              children: [
-                Container(
-                    width: 40,
-                    height: 40,
-                    child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8sZeE4oI950OH1UqdLQqVxii14Z6r9GFh2A&usqp=CAU',)),
-                Text('Tesla'),
-              ],
-            ),
-            Column(
-              children: [
-                Container(
-                    width: 40,
-                    height: 40,
-                    child: Image.network('https://thumbnews.nateimg.co.kr/view610///onimg.nate.com/orgImg/mk/2011/01/24/20110124_1295860013.jpg',)),
-                Text('쉐보레'),
-              ],
-            ),
-            Opacity(
-              opacity: 0.0,
+            InkWell(
+              onTap: () {},
               child: Column(
                 children: [
                   Container(
-                      width: 50,
-                      height: 36,
-                      child: Image.network('https://mblogthumb-phinf.pstatic.net/20160705_13/myredsuns_1467694860567XutrA_JPEG/2.jpg?type=w800',)),
-                  Text('BMW'),
+                      width: 40,
+                      height: 40,
+                      child: Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8sZeE4oI950OH1UqdLQqVxii14Z6r9GFh2A&usqp=CAU',)),
+                  Text('Tesla'),
+                ],
+              ),
+            ),
+            InkWell(
+                onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                      width: 40,
+                      height: 40,
+                      child: Image.network('https://thumbnews.nateimg.co.kr/view610///onimg.nate.com/orgImg/mk/2011/01/24/20110124_1295860013.jpg',)),
+                  Text('쉐보레'),
                 ],
               ),
             ),
             Opacity(
               opacity: 0.0,
-              child: Column(
-                children: [
-                  Container(
-                      width: 50,
-                      height: 36,
-                      child: Image.network('https://mblogthumb-phinf.pstatic.net/20160707_205/ppanppane_1467862738612XSIhH_PNG/%BA%A5%C3%F7%B7%CE%B0%ED_%282%29.png?type=w800',)),
-                  Text('Benz'),
-                ],
+              child: GestureDetector(
+                onTap: () {
+
+                },
+                child: Column(
+                  children: [
+                    Container(
+                        width: 50,
+                        height: 36,
+                        child: Image.network('https://mblogthumb-phinf.pstatic.net/20160705_13/myredsuns_1467694860567XutrA_JPEG/2.jpg?type=w800',)),
+                    Text('BMW'),
+                  ],
+                ),
+              ),
+            ),
+            Opacity(
+              opacity: 0.0,
+              child: GestureDetector(
+                onTap: () {
+
+                },
+                child: Column(
+                  children: [
+                    Container(
+                        width: 50,
+                        height: 36,
+                        child: Image.network('https://mblogthumb-phinf.pstatic.net/20160707_205/ppanppane_1467862738612XSIhH_PNG/%BA%A5%C3%F7%B7%CE%B0%ED_%282%29.png?type=w800',)),
+                    Text('Benz'),
+                  ],
+                ),
               ),
             ),
 
