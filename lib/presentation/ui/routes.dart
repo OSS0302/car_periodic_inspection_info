@@ -39,9 +39,15 @@ final GoRouter router = GoRouter(
         return const SignUpScreen();
       }),
     GoRoute(
-      path: '/MyPageScreen',
+      path: '/myPageScreen',
       builder: (BuildContext context, GoRouterState state) {
         return  MyPageScreen();
+      },
+    ),
+    GoRoute(
+      path: '/hyundaiScreen',
+      builder: (BuildContext context, GoRouterState state) {
+        return  HyundaiScreen();
       },
     ),
 
