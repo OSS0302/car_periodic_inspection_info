@@ -16,19 +16,22 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   final stream = supabase.from('user_info').stream(primaryKey: ['id']);
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController companyController = TextEditingController();
   TextEditingController carSelectController = TextEditingController();
   TextEditingController gasSelectController = TextEditingController();
+  TextEditingController checkTypeController = TextEditingController();
   TextEditingController distanceController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController carNumberController = TextEditingController();
   String? userUid;
-
+  DateTime koreaNow = DateTime.now();
   @override
   void dispose() {
     companyController.dispose();
     carSelectController.dispose();
     gasSelectController.dispose();
+    checkTypeController.dispose();
     distanceController.dispose();
     dateController.dispose();
     carNumberController.dispose();
@@ -37,10 +40,11 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
 
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      await supabase.from('car_periodic_add').insert({
+      await supabase.from('CarPeriodicAdd').insert({
         'company': companyController.text ?? '',
         'car_select': carSelectController.text ?? '',
         'gas_select': gasSelectController.text ?? '',
+        'check_type': checkTypeController.text ?? '',
         'car_number': carNumberController.text ?? '',
         'distance': distanceController.text ??'',
       });
@@ -49,6 +53,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'company': companyController.text,
         'car_select': carSelectController.text,
         'gas_select': gasSelectController.text,
+        'check_type': checkTypeController.text,
         'car_number': carNumberController.text,
         'distance': distanceController.text,
       });
@@ -133,6 +138,22 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                   ),
                   SizedBox(
                     height: 10,
+                  ),TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '점검유형을 입력해주세요';
+                      }
+                      return null;
+                    },
+                    controller: checkTypeController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: '점검유형',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   TextFormField(
                     validator: (value) {
@@ -142,6 +163,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       return null;
                     },
                     controller: distanceController,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintText: '주행한 키로수',
                       border: OutlineInputBorder(),

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   String? userUid;
   bool _isLoading = true;
   bool? isChecked = false;
+
 
   @override
   void initState() {
@@ -138,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget carInfo() {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: supabase.from('car_periodic_add').stream(primaryKey: ['id']).eq(
+      stream: supabase.from('CarPeriodicAdd').stream(primaryKey: ['id']).eq(
           'uid', userUid!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -188,6 +187,9 @@ class _MainScreenState extends State<MainScreen> {
                       Text(
                         '연료유형: ${item['gas_select']}',
                         style: const TextStyle(fontSize: 20),
+                      ),Text(
+                        '점검유형: ${item['check_type']}',
+                        style: const TextStyle(fontSize: 20),
                       ),
                       Text(
                         '차량번호: ${item['car_number']}',
@@ -197,8 +199,11 @@ class _MainScreenState extends State<MainScreen> {
                         '주행거리: ${item['distance']} km',
                         style: const TextStyle(fontSize: 20),
                       ),
-                      Text(DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9))),
-                        style: const TextStyle(fontSize: 20),
+                      Text('점검일자: ${DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9)))}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      Text('다음 점검 일자: ${DateFormat('yyyy년 MM월 dd일 ').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9)))}',
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ],
                   );
@@ -252,7 +257,9 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+              context.push('/hyundaiScreen');
+              },
               child: Column(
                 children: [
                   Container(
@@ -330,38 +337,28 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
             ),
-            Opacity(
-              opacity: 0.0,
-              child: GestureDetector(
-                onTap: () {
-
-                },
-                child: Column(
-                  children: [
-                    Container(
-                        width: 50,
-                        height: 36,
-                        child: Image.network('https://mblogthumb-phinf.pstatic.net/20160705_13/myredsuns_1467694860567XutrA_JPEG/2.jpg?type=w800',)),
-                    Text('BMW'),
-                  ],
-                ),
+            GestureDetector(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                      width: 50,
+                      height: 36,
+                      child: Image.network('https://mblogthumb-phinf.pstatic.net/20160705_13/myredsuns_1467694860567XutrA_JPEG/2.jpg?type=w800',)),
+                  Text('BMW'),
+                ],
               ),
             ),
-            Opacity(
-              opacity: 0.0,
-              child: GestureDetector(
-                onTap: () {
-
-                },
-                child: Column(
-                  children: [
-                    Container(
-                        width: 50,
-                        height: 36,
-                        child: Image.network('https://mblogthumb-phinf.pstatic.net/20160707_205/ppanppane_1467862738612XSIhH_PNG/%BA%A5%C3%F7%B7%CE%B0%ED_%282%29.png?type=w800',)),
-                    Text('Benz'),
-                  ],
-                ),
+            GestureDetector(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                      width: 50,
+                      height: 36,
+                      child: Image.network('https://mblogthumb-phinf.pstatic.net/20160707_205/ppanppane_1467862738612XSIhH_PNG/%BA%A5%C3%F7%B7%CE%B0%ED_%282%29.png?type=w800',)),
+                  Text('Benz'),
+                ],
               ),
             ),
 
