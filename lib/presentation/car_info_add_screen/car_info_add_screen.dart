@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -40,14 +39,15 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
 
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
+
       await supabase.from('CarPeriodicAdd').insert({
-        'company': companyController.text ?? '',
-        'car_select': carSelectController.text ?? '',
-        'gas_select': gasSelectController.text ?? '',
-        'check_type': checkTypeController.text ?? '',
-        'car_number': carNumberController.text ?? '',
-        'distance': distanceController.text ??'',
-      });
+        'company': companyController.text.trim() ?? '',
+        'car_select': carSelectController.text.trim() ?? '',
+        'gas_select': gasSelectController.text.trim() ?? '',
+        'check_type': checkTypeController.text.trim() ?? '',
+        'car_number': carNumberController.text.trim() ?? '',
+        'distance': int.tryParse(distanceController.text.trim()) ?? 0,
+        });
 
       context.go('/mainScreen', extra : {
         'company': companyController.text,
