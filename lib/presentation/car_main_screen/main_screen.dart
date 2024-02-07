@@ -7,18 +7,29 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final supabase = Supabase.instance.client;
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  final String carSelect;
+  final String carNumber;
+
+  const MainScreen({
+    Key? key,
+    required this.carSelect,
+    required this.carNumber,
+  }) : super(key: key);
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
+
   StreamSubscription? _streamSubscription;
+
   List<Map<String, dynamic>> _data = [];
   String? userUid;
   bool _isLoading = true;
   bool? isChecked = false;
+
+
 
 
   @override
@@ -64,9 +75,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('아반떼 000님 환영합니다.'),
+        title: Text('${widget.carSelect} ${widget.carNumber}님 환영합니다.',style: TextStyle(fontWeight: FontWeight.bold,fontSize:18 ),),
       ),
       body: SafeArea(
         child: Column(

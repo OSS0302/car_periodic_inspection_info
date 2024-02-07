@@ -14,13 +14,19 @@ import 'package:provider/provider.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
-    GoRoute(
-      path: '/mainScreen',
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => MainViewModel(repository: CarInfoRepositoryImpl()),
-        child:  BottomNaviScreen(),
-      ),
-    ),
+GoRoute(
+path: '/mainScreen',
+  builder: (context, state) {
+    final carInfo = state.extra as Map<String, String>?;
+    return MainScreen(
+      carSelect: carInfo?['car_select'] ?? 'Unknown',
+      carNumber: carInfo?['car_number'] ?? 'Unknown',
+    );
+  },
+),
+
+
+
     GoRoute(
       path: '/addInfoScreen',
       builder: (context, state) => ChangeNotifierProvider(
