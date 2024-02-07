@@ -194,39 +194,41 @@ class _MainScreenState extends State<MainScreen> {
                           item['check_type'] == '히터필터' ||
                           item['check_type'] == '에어컨필터' ||
                           item['check_type'] == '히터클리닝') {
-                        nextInspectionDate =
-                            inspectionDate.add(Duration(days: 180));
+                        nextInspectionDate = inspectionDate.add(Duration(days: 180));
 
                       } else if (item['check_type'] == '엔진플러싱' ||
-                          item['check_type'] == '흡기라인 플러싱' ||
+                          item['check_type'] == '흡기라인플러싱' ||
                           item['check_type'] == '휠얼라이먼트' ||
                           item['check_type'] == '브레이크패드' ||
-                          item['check_type'] == '파워스티어링오일' ||
                           item['check_type'] == '에어컨냉매점검' ||
                           item['check_type'] == '냉각라인플러싱') {
-                        nextInspectionDate =
-                            inspectionDate.add(Duration(days: 365));
+                        nextInspectionDate = inspectionDate.add(Duration(days: 365));
 
-                      }else if (item['check_type'] == '디퍼런션오일' ||
+                      }else if (item['check_type'] == '디퍼런셜오일' ||
                           item['check_type'] == '가열플러그' ||
-                          item['check_type'] == '가열플러그(예열)' ||
+                          item['check_type'] == '연료휠터' ||
                           item['check_type'] == '트랜스퍼오일' ||
                           item['check_type'] == '파워스티어링오일' ||
                           item['check_type'] == '브레이크오일' ||
+                          item['check_type'] == '연소실플러싱' ||
                           item['check_type'] == '부동액' ||
-                          item['check_type'] == '브레이크 디스크 연마' ||
+                          item['check_type'] == '인젝터클리닝' ||
+                          item['check_type'] == '변속기오일' ||
+                          item['check_type'] == '브레이크디스크연마' ||
                           item['check_type'] == '냉각라인플러싱') {
-                        nextInspectionDate =
-                            inspectionDate.add(Duration(days: 730));
+                        nextInspectionDate = inspectionDate.add(Duration(days: 730));
 
-                      } else if (item['check_type'] == '배터리') {
-                        nextInspectionDate =
-                            inspectionDate.add(Duration(days: 1095));
+                      } else if (item['check_type'] == '배터리'||
+                      item['check_type'] == '외부구동밸트' ) {
+                        nextInspectionDate = inspectionDate.add(Duration(days: 1095));
 
                       } else if (item['check_type'] == '워터펌프베어링' ||
-                          item['check_type'] == '타이밍벨트') {
-                        nextInspectionDate =
-                            inspectionDate.add(Duration(days: 1460));
+                          item['check_type'] == '백금플러그'||
+                          item['check_type'] == '타이밍밸트') {
+                        nextInspectionDate = inspectionDate.add(Duration(days: 1460));
+
+                      } else if (item['check_type'] == '미션마운팅') {
+                        nextInspectionDate = inspectionDate.add(Duration(days: 1825));
 
                       } else {
                         nextInspectionDate = inspectionDate;
@@ -238,7 +240,8 @@ class _MainScreenState extends State<MainScreen> {
                         additionalDistance = 7500;
 
                       } else if (item['gas_select'] == '디젤' &&
-                          item['check_type'] == '엔진오일') {
+                          item['check_type'] == '엔진오일'||
+                          item['check_type'] == '히터클리닝') {
                         additionalDistance = 10000;
 
                       } else if (item['gas_select'] == '가솔린' &&
@@ -268,6 +271,8 @@ class _MainScreenState extends State<MainScreen> {
                           item['check_type'] == '변속기오일' ||
                           item['check_type'] == '연료휠터' ||
                           item['check_type'] == '브레이크오일' ||
+                          item['check_type'] == '브레이크디스크연마' ||
+                          item['check_type'] == '파워스티어링오일' ||
                           item['check_type'] == '부동액' ||
                           item['check_type'] == '냉각라인 플러싱' ||
                           item['check_type'] == '인젝터클리닝' ||
@@ -281,8 +286,6 @@ class _MainScreenState extends State<MainScreen> {
 
                       } else if (item['gas_select'] == '가솔린' &&
                               item['gas_select'] == '디젤' ||
-                          item['check_type'] == '연소실플러싱' ||
-                          item['check_type'] == '파워스티어링 오일' ||
                           item['check_type'] == '외부구동밸트' ||
                           item['check_type'] == '가열플러그' ||
                           item['check_type'] == '일반점화플러그') {
@@ -297,7 +300,7 @@ class _MainScreenState extends State<MainScreen> {
 
                       } else if (item['gas_select'] == '가솔린' &&
                               item['gas_select'] == '디젤' ||
-                          item['check_type'] == '밋션 마운팅') {
+                          item['check_type'] == '미션마운팅') {
                         additionalDistance = 100000;
                       }
 
