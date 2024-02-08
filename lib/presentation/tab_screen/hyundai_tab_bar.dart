@@ -1,5 +1,8 @@
 import 'package:car_periodic_inspection_info/presentation/tab_screen/tab_info.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../car_main_screen/main_screen.dart';
 
 class HyundaiScreen extends StatefulWidget {
   const HyundaiScreen({Key? key}) : super(key: key);
@@ -9,17 +12,49 @@ class HyundaiScreen extends StatefulWidget {
 }
 
 class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateMixin {
+  late final Stream<List<Map<String, dynamic>>> carDataStream;
   late TabController _tabController;
 
   @override
   void initState() {
-    _tabController = TabController(
-      length: 16,
-      vsync: this, //vsync에 this 형태로 전달해야 애니메이션이 정상 처리됨
-    );
     super.initState();
+    _tabController = TabController(length: 16, vsync: this);
+    carDataStream = supabase
+        .from('CarPeriodicAdd')
+        .stream(primaryKey: ['id'])
+        .order('date', ascending: false)
+        .map((list) => list.map((map) => map as Map<String, dynamic>).toList());
   }
 
+  Widget carPeriodicInfo() {
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: carDataStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text("데이터가 없습니다."));
+        }
+        var data = snapshot.data!;
+        return ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            var item = data[index];
+            return Column(
+              children: [
+                ListTile(
+                  title: Text('${item['car_select']}: ${item['car_number']}'),
+                    subtitle: Text('주행거리: ${item['distance']} km, 점검유형: ${item['check_type']}\n''점검일자: ${DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9)))}'),
+                ),
+                Divider(thickness: 1,color: Colors.black,),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +115,7 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
             child: TabBarView(
               controller: _tabController,
               children: [
-                tabViewInfo(''),
+                carPeriodicInfo(),
                 tabViewInfo(engineOil),
                 tabViewInfo(cleaningFlushing),
                 tabViewInfo(sparkPlug),
@@ -105,6 +140,7 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
     );
   }
 }
+
 
 Widget tabInfo( String title) {
   return Container(
@@ -132,16 +168,4 @@ Widget tabViewInfo(String content) {
   );
 }
 
-class CarPeriodicListScreen extends StatefulWidget {
-  const CarPeriodicListScreen({super.key});
 
-  @override
-  State<CarPeriodicListScreen> createState() => _CarPeriodicListScreenState();
-}
-
-class _CarPeriodicListScreenState extends State<CarPeriodicListScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
