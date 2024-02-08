@@ -44,8 +44,9 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
             return Column(
               children: [
                 ListTile(
-                  title: Text('${item['car_select']}: ${item['car_number']}'),
-                    subtitle: Text('주행거리: ${item['distance']} km, 점검유형: ${item['check_type']}\n''점검일자: ${DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9)))}'),
+                  title: Text('${item['car_select']}: ${item['car_number']}',style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                    subtitle: Text('주행거리: ${item['distance']} km, \n점검유형: ${item['check_type']}\n''점검일자: ${DateFormat('yyyy년 MM월 dd일 HH시 mm분 ss초').format(DateTime.parse(item['date']).toUtc().add(Duration(hours: 9)))}'
+                      ,style:TextStyle(fontSize: 15) ,),
                 ),
                 Divider(thickness: 1,color: Colors.black,),
               ],
