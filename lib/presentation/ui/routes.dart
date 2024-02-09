@@ -6,6 +6,7 @@ import 'package:car_periodic_inspection_info/presentation/my_page/my_page_screen
 import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
+import 'package:car_periodic_inspection_info/presentation/tab_screen/kia_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
 GoRoute(
+name: '/mainScreen',
 path: '/mainScreen',
   builder: (context, state) {
     final carInfo = state.extra as Map<String, String>?;
@@ -30,9 +32,14 @@ path: '/mainScreen',
       ),
     ),
     GoRoute(
+      name:'/',
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return  SignInScreen();
+        final carInfo = state.extra as Map<String, String>?;
+        return  SignInScreen(
+          carSelect: state.uri.queryParameters['car_select'] ?? '000',
+          carNumber: state.uri.queryParameters['car_number'] ?? '00000000',
+        );
       },
     ),GoRoute(
       path: '/signUpScreen',
@@ -49,6 +56,11 @@ path: '/mainScreen',
       path: '/hyundaiScreen',
       builder: (BuildContext context, GoRouterState state) {
         return  HyundaiScreen();
+      },
+    ),GoRoute(
+      path: '/kiaScreen',
+      builder: (BuildContext context, GoRouterState state) {
+        return  KiaScreen();
       },
     ),
 
