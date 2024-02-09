@@ -1,8 +1,8 @@
-import 'package:car_periodic_inspection_info/presentation/tab_screen/tab_info.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../car_main_screen/main_screen.dart';
+import 'hyundai_tab_info.dart';
 
 class HyundaiScreen extends StatefulWidget {
   const HyundaiScreen({Key? key}) : super(key: key);
@@ -14,16 +14,28 @@ class HyundaiScreen extends StatefulWidget {
 class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateMixin {
   late final Stream<List<Map<String, dynamic>>> carDataStream;
   late TabController _tabController;
+  String? userUid;
 
   @override
   void initState() {
     super.initState();
+    initializeUserInfoAndSubscribeToChanges();
     _tabController = TabController(length: 16, vsync: this);
     carDataStream = supabase
         .from('CarPeriodicAdd')
         .stream(primaryKey: ['id'])
+        .eq('uid', userUid!)
         .order('date', ascending: false)
         .map((list) => list.map((map) => map as Map<String, dynamic>).toList());
+  }
+  Future<void> initializeUserInfoAndSubscribeToChanges() async {
+    final user = supabase.auth.currentUser;
+    if (user != null) {
+      setState(() {
+        userUid = user.id;
+      });
+
+    }
   }
 
   Widget carPeriodicInfo() {
