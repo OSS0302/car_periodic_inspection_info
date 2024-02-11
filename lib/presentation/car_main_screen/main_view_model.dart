@@ -1,41 +1,21 @@
 import 'dart:async';
 
-import 'package:car_periodic_inspection_info/data/repository/hyundi_mock_repositoryimpl.dart';
-import 'package:car_periodic_inspection_info/domain/repository/car_periodic_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainViewModel extends ChangeNotifier {
   String? userUid;
   bool _isLoading = true;
-  bool? isChecked = false;
-  bool isComplete = false;
   final supabase = Supabase.instance.client;
   StreamSubscription? _streamSubscription;
-  CarPeriodicRepository _repository;
   List<Map<String, dynamic>> _data = [];
 
   bool get isLoading => _isLoading;
 
-  MainViewModel({
-    required CarPeriodicRepository repository,
-  }) : _repository = repository;
-
-
-  Future<void> fetchMainInfoData() async {
-    _isLoading = true;
-    notifyListeners();
-    await _repository.getCarInfo;
-    notifyListeners();
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  @override
-  void initState() {
+  Future<void> getReady() async {
     initializeUserInfoAndSubscribeToChanges();
-    notifyListeners();
   }
+
 
   Future<void> initializeUserInfoAndSubscribeToChanges() async {
     final user = supabase.auth.currentUser;
@@ -49,7 +29,7 @@ class MainViewModel extends ChangeNotifier {
 
   void subscribeToUserChanges(String userId) {
     _streamSubscription = supabase
-        .from('car_periodic_add')
+        .from('CarPeriodicAdd')
         .stream(primaryKey: ['id'])
         .eq('uid', userId)
         .order('date', ascending: false)
@@ -65,9 +45,4 @@ class MainViewModel extends ChangeNotifier {
     });
   }
 
-  @override
-  void dispose() {
-    _streamSubscription?.cancel();
-    super.dispose();
-  }
 }
