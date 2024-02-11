@@ -1,69 +1,82 @@
-import 'package:go_router/go_router.dart';
-import 'package:car_periodic_inspection_info/domain/repository/car_periodic_repository.dart';
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'car_info_add_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../car_main_screen/main_screen.dart';
+
 
 class CarInfoAddViewModel extends ChangeNotifier {
-  final CarPeriodicRepository _repository;
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-   CarInfoAddViewModel({
-    required CarPeriodicRepository repository,
-  }) : _repository = repository;
-
-   Future<void> fetchGetData() async {
-     _isLoading  = true;
-    notifyListeners();
-    await _repository.getCarInfo;
-      _isLoading = false;
-      notifyListeners();
-   }
-  final stream = supabase.from('user_info').stream(primaryKey: ['id']);
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController companyController = TextEditingController();
-  TextEditingController carSelectController = TextEditingController();
-  TextEditingController gasSelectController = TextEditingController();
-  TextEditingController checkTypeController = TextEditingController();
-  TextEditingController distanceController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController carNumberController = TextEditingController();
   String? userUid;
-  DateTime koreaNow = DateTime.now();
-  @override
-  void dispose() {
-    companyController.dispose();
-    carSelectController.dispose();
-    gasSelectController.dispose();
-    checkTypeController.dispose();
-    distanceController.dispose();
-    dateController.dispose();
-    carNumberController.dispose();
-    super.dispose();
+  StreamSubscription? _streamSubscription;
+  List<Map<String, dynamic>> _data = [];
+  String getCompany = '';
+  String getCarSelect = '';
+  String getGasSelect = '';
+  String getCheckType = '';
+  int distance = 0;
+  String getCarNumber = '';
+
+  void setValue({
+    String? companyString,
+    String? carSelectString,
+    String? gasSelectString,
+    String? checkTypeString,
+    int? dinstanceInt,
+    String? carNumberString,
+  }) {
+    getCompany = companyString ?? getCompany;
+    getCarSelect = carSelectString ?? getCarSelect;
+    getGasSelect = gasSelectString ?? getGasSelect;
+    getCheckType = checkTypeString ?? getCheckType;
+    distance = dinstanceInt ?? distance;
+    getCarNumber = carNumberString ?? getCarNumber;
+
+    log('companyString: $companyString, carSelectString: $carSelectString,'
+        'gasSelectString: $gasSelectString, checkTypeString: $checkTypeString'
+        'dinstanceInt:$dinstanceInt carNumberString: $carNumberString');
   }
 
-  void validateAndSubmit() async {
-    if (_formKey.currentState?.validate() ?? false) {
-
-      await supabase.from('CarPeriodicAdd').insert({
-        'company': companyController.text.trim() ?? '',
-        'car_select': carSelectController.text.trim() ?? '',
-        'gas_select': gasSelectController.text.trim() ?? '',
-        'check_type': checkTypeController.text.trim() ?? '',
-        'car_number': carNumberController.text.trim() ?? '',
-        'distance': int.tryParse(distanceController.text.trim()) ?? 0,
-      });
-
-
-    }
-
-  }
   Future<void> initializeUserInfoAndSubscribeToChanges() async {
     final user = supabase.auth.currentUser;
-      userUid = user?.id;
+    if (user != null) {
+      userUid = user.id;
 
+      subscribeToUserChanges(user.id);
+      notifyListeners();
+    }
   }
 
+  void subscribeToUserChanges(String userId) {
+    _streamSubscription = supabase
+        .from('CarPeriodicAdd')
+        .stream(primaryKey: ['id'])
+        .eq('uid', userId)
+        .order('date', ascending: false)
+        .listen((data) {
+
+      _data = data;
+      notifyListeners();
+    }, onError: (error) {
+
+      notifyListeners();
+    });
+  }
+
+ Future <bool> validateAndSubmit() async {
+    try {
+      await supabase.from('CarPeriodicAdd').insert({
+        'company': getCompany.trim() ?? '',
+        'car_select': getCarSelect.trim() ?? '',
+        'gas_select': getGasSelect.trim() ?? '',
+        'check_type': getCheckType.trim() ?? '',
+        'distance': distance ?? 0,
+        'car_number': getCarNumber.trim() ?? '',
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
