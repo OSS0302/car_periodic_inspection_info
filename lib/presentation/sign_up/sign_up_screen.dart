@@ -1,5 +1,8 @@
+import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -14,23 +17,9 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController idController = TextEditingController();
-  TextEditingController pwController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-
-  @override
-  void dispose() {
-    idController.dispose();
-    pwController.dispose();
-    nameController.dispose();
-    phoneController.dispose();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final viewModelNotifire = context.read<SignInUpwModel>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('회원가입 페이지'),
@@ -51,7 +40,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     return null;
                   },
-                  controller: idController,
+                  onChanged: (String value){
+                    viewModelNotifire.setValue(idString: value);
+                  },
+                  // controller: idController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -60,7 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     labelText: '이메일',
                     hintText: '이메일',
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.blue,
                         width: 2,
                       ),
@@ -79,7 +71,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     return null;
                   },
-                  controller: pwController,
+                  onChanged: (String value) {
+                    viewModelNotifire.setValue(passwordString:value);
+                  },
+                  // controller: pwController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -88,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     labelText: '비밀번호',
                     hintText: '비밀번호',
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.blue,
                         width: 2,
                       ),
@@ -104,10 +99,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     if (value == null || value.isEmpty) {
                       return '이름을 입력하세요';
                     }
-
                     return null;
                   },
-                  controller: nameController,
+                  onChanged: (String value) {
+                    viewModelNotifire.setValue(namePass: value);
+                  },
+                  // controller: nameController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -116,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     labelText: '이름',
                     hintText: '이름',
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.blue,
                         width: 2,
                       ),
@@ -135,7 +132,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     return null;
                   },
-                  controller: phoneController,
+                    onChanged: (String value) {
+                      viewModelNotifire.setValue(phonePass: value);
+                    },
+                  // controller: phoneController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -144,7 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     labelText: '전화번호',
                     hintText: '전화번호',
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.blue,
                         width: 2,
                       ),
@@ -153,32 +153,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 200,
-                height: 60,
-                child: FloatingActionButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      context.go('/');
-                      final AuthResponse res = await supabase.auth.signUp(
-                        email: idController.text,
-                        password: pwController.text,
-                        data: {
-                          'name': nameController.text,
-                          'phone': phoneController.text,
-                        },
-                      );
-                      if (res.user != null) {
-                        await supabase.from('user_info').insert({
-                          'name': nameController.text,
-                          'phone': phoneController.text,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0.h),
+                child: SizedBox(
+                  width: 200.w,
+                  height: 60.h,
+                  child: FloatingActionButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await viewModelNotifire.signupSupabase().then((value) {
+                          if(value) {
+                            context.go('/');
+                          }
                         });
                       }
-                    }
-                  },
-                  child: Text(
-                    '가입 완료',
-                    style: TextStyle(fontSize: 30),
+                    },
+                    child: Text(
+                      '회원 가입',
+                      style: TextStyle(fontSize: 18.sp),
+                    ),
                   ),
                 ),
               )

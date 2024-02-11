@@ -15,7 +15,11 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
   late final Stream<List<Map<String, dynamic>>> carDataStream;
   late TabController _tabController;
   String? userUid;
-
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();

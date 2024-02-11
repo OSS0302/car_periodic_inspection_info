@@ -1,5 +1,7 @@
+import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -12,9 +14,20 @@ class CarInfoAddScreen extends StatefulWidget {
 }
 
 class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
-  final stream = supabase.from('user_info').stream(primaryKey: ['id']);
+  final stream = supabase.from('CarPeriodicAdd').stream(primaryKey: ['id']);
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      final viewModelNoti = context.read<CarInfoAddViewModel>();
+      viewModelNoti.initializeUserInfoAndSubscribeToChanges();
+    });
+
+  }
 
   TextEditingController companyController = TextEditingController();
   TextEditingController carSelectController = TextEditingController();
@@ -24,7 +37,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController carNumberController = TextEditingController();
   String? userUid;
-  DateTime koreaNow = DateTime.now();
+
   @override
   void dispose() {
     companyController.dispose();
@@ -37,9 +50,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
     super.dispose();
   }
 
+//
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
-
       await supabase.from('CarPeriodicAdd').insert({
         'company': companyController.text.trim() ?? '',
         'car_select': carSelectController.text.trim() ?? '',
@@ -47,9 +60,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'check_type': checkTypeController.text.trim() ?? '',
         'car_number': carNumberController.text.trim() ?? '',
         'distance': int.tryParse(distanceController.text.trim()) ?? 0,
-        });
+      });
 
-      context.go('/mainScreen', extra : {
+      context.go('/mainScreen', extra: {
         'company': companyController.text,
         'car_select': carSelectController.text,
         'gas_select': gasSelectController.text,
@@ -57,18 +70,19 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
         'car_number': carNumberController.text,
         'distance': distanceController.text,
       });
-
     }
-
   }
+
   Future<void> initializeUserInfoAndSubscribeToChanges() async {
     final user = supabase.auth.currentUser;
-      setState(() {
-        userUid = user?.id;
-      });
+    setState(() {
+      userUid = user?.id;
+    });
   }
+
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CarInfoAddViewModel>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -85,9 +99,10 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                   Row(
                     children: [
                       Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40)),
-                      ),],
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40)),
+                      ),
+                    ],
                   ),
                   TextFormField(
                     validator: (value) {
@@ -95,6 +110,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                         return '제조 회사를 입력 해 주세요';
                       }
                       return null;
+                    },
+                    onChanged: (String value) {
+                      viewModel.setValue(companyString: value);
                     },
                     controller: companyController,
                     keyboardType: TextInputType.text,
@@ -113,6 +131,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
+                    onChanged: (String value) {
+                      viewModel.setValue(carSelectString: value);
+                    },
                     controller: carSelectController,
                     decoration: InputDecoration(
                       hintText: '차량선택',
@@ -129,6 +150,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
+                    onChanged: (String value) {
+                      viewModel.setValue(gasSelectString: value);
+                    },
                     controller: gasSelectController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
@@ -138,12 +162,16 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                   ),
                   SizedBox(
                     height: 10,
-                  ),TextFormField(
+                  ),
+                  TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return '점검유형을 입력해주세요';
                       }
                       return null;
+                    },
+                    onChanged: (String value) {
+                      viewModel.setValue(checkTypeString: value);
                     },
                     controller: checkTypeController,
                     keyboardType: TextInputType.text,
@@ -162,6 +190,10 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
+                    onChanged: (String value) {
+                      int changInt = int.tryParse(value) ?? 0;
+                      viewModel.setValue(dinstanceInt: changInt);
+                    },
                     controller: distanceController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -179,6 +211,9 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       }
                       return null;
                     },
+                    onChanged: (String value) {
+                      viewModel.setValue(carNumberString: value);
+                    },
                     controller: carNumberController,
                     decoration: InputDecoration(
                       hintText: '차량 번호 입력',
@@ -188,12 +223,20 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                   SizedBox(
                     height: 10,
                   ),
-
                   Container(
                       width: 300,
                       height: 50,
                       child: ElevatedButton(
-                          onPressed: validateAndSubmit,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await viewModel.validateAndSubmit().then((value) {
+
+                                if (value) {
+                                  context.go('/mainScreen');
+                                }
+                              });
+                            }
+                          },
                           child: Text('작성 완료'))),
                 ],
               ),
@@ -204,4 +247,3 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
     );
   }
 }
-
