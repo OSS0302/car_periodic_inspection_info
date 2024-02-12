@@ -11,8 +11,9 @@ class SignInViewModel extends ChangeNotifier {
   String getId = '';
   String getPass = '';
 
-  void setValue({bool isPassword = false, String? idString, String? passwordString}) {
-    if(isPassword){
+  void setValue(
+      {bool isPassword = false, String? idString, String? passwordString}) {
+    if (isPassword) {
       log('pass');
       getPass = passwordString!;
     } else {
@@ -21,34 +22,44 @@ class SignInViewModel extends ChangeNotifier {
     }
   }
 
-  Future<(String carSelected, String carNumber)?> loginSupabase() async {
-    final res = await supabase.auth.signInWithPassword(
-      email: getId,
-      password: getPass,
-    );
-
-    if (res.user != null) {
-      final data = await supabase
-          .from('CarPeriodicAdd').select('car_select, car_number').eq('uid', res.user!.id);
-      String carSelect = '0000';
-      String carNumber = '0000000';
-      if(data.isNotEmpty){
-        carSelect = data[0]['car_select'] ?? '0000';
-        carNumber = data[0]['car_number'] ?? '0000000';
+  Future<bool> loginSupabase() async {
+    try {
+      final res = await supabase.auth.signInWithPassword(
+        email: getId,
+        password: getPass,
+      );
+      if (res.user != null) {
+        return true;
+      } else {
+        return false;
       }
-
-      log('carSelect $carSelect, carNumber: $carNumber');
-
-      return (carSelect, carNumber);
-    } else {
-      return null;
+    } catch (e) {
+      return false;
     }
+    // final res = await supabase.auth.signInWithPassword(
+    //   email: getId,
+    //   password: getPass,
+    // );
+    //
+    // if (res.user != null) {
+    //   final data = await supabase
+    //       .from('user_info')
+    //       .select('name, phone')
+    //       .eq('id', supabase.auth.currentUser!.id);
+    //
+    //   String name = '';
+    //   String phone = '';
+    //   log('message ???? ${data}');
+    //   if (data.isNotEmpty) {
+    //     name = '${data[0]['name']}(${data[0]['phone']})';
+    //     log('message?? ${data[0]['name']}');
+    //   }
+    //
+    //   log('name $name, carNumber: $phone');
+    //
+    //   return name;
+    // } else {
+    //   return null;
+    // }
   }
 }
-
-
-
-
-
-
-

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_view_model.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +9,13 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../sign_up/sign_up_screen.dart';
-final supabase = Supabase.instance.client;
-class SignInScreen extends StatefulWidget {
 
+final supabase = Supabase.instance.client;
+
+class SignInScreen extends StatefulWidget {
   const SignInScreen({
     Key? key,
   }) : super(key: key);
-
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -41,17 +43,14 @@ class _SignInScreenState extends State<SignInScreen> {
         });
 
         await viewNotifier.loginSupabase().then((value) {
-          if (value != null) {
+          if (value) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 behavior: SnackBarBehavior.floating,
                 content: Text('로그인완료'),
               ),
             );
-            context.goNamed('/mainScreen', queryParameters: {
-              'car_select': value!.$1,
-              'car_number': value!.$2,
-            });
+            context.goNamed('/mainScreen');
           } else {
             print('로그인 중 오류 발생');
           }
@@ -60,19 +59,17 @@ class _SignInScreenState extends State<SignInScreen> {
         setState(() {
           isLoading = false;
         });
-      } catch(e) {
+      } catch (e) {
         print('로그인 중 오류 발생');
         setState(() {
           isLoading = false;
         });
       }
 
-
-
-        // final res = await supabase.auth.signInWithPassword(
-        //   email: idController.text,
-        //   password: pwController.text,
-        // );
+      // final res = await supabase.auth.signInWithPassword(
+      //   email: idController.text,
+      //   password: pwController.text,
+      // );
 
       //   if (res.user != null) {
       //     ScaffoldMessenger.of(context).showSnackBar(
@@ -89,7 +86,6 @@ class _SignInScreenState extends State<SignInScreen> {
       //   setState(() {
       //     isLoading = false;
       //   });
-
     }
   }
 
@@ -112,19 +108,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Center(
                     child: Text(
                       '로그인',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 30.sp),
                     ),
                   ),
                 ),
                 Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjIfxtJWjgQh0Q_MNtzM9PnnKK6_Otv1X71g&usqp=CAU',
-                    fit: BoxFit.cover,
-                    height: 250.h,
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjIfxtJWjgQh0Q_MNtzM9PnnKK6_Otv1X71g&usqp=CAU',
+                  fit: BoxFit.cover,
+                  height: 250.h,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0.h),
                   child: TextFormField(
-                    onChanged: (String value){
+                    onChanged: (String value) {
                       setState(() {
                         viewNotifier.setValue(idString: value);
                       });
@@ -154,15 +151,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 TextFormField(
-                  onChanged: (String value){
+                  onChanged: (String value) {
                     setState(() {
-                      viewNotifier.setValue(isPassword: true, passwordString: value);
+                      viewNotifier.setValue(
+                          isPassword: true, passwordString: value);
                     });
                   },
                   validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        value.length < 6) {
+                    if (value == null || value.isEmpty || value.length < 6) {
                       return '비밀번호를 입력하세요';
                     }
                     return null;
@@ -186,18 +182,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0.h),
                   child: Container(
-                      width: 300.w,
-                      height: 60.h,
-                      child: ElevatedButton(
-                          onPressed: isLoading ? null : _signIn,
-                          // style: ButtonStyle(
-                          //   backgroundColor: context.
-                          // ),
-                          child: Text(
-                            '로그인',
-                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                          ),
+                    width: 300.w,
+                    height: 60.h,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _signIn,
+                      // style: ButtonStyle(
+                      //   backgroundColor: context.
+                      // ),
+                      child: Text(
+                        '로그인',
+                        style: TextStyle(
+                            fontSize: 18.sp, fontWeight: FontWeight.bold),
                       ),
+                    ),
                   ),
                 ),
                 TextButton(

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,21 +12,81 @@ class MainViewModel extends ChangeNotifier {
   StreamSubscription? _streamSubscription;
   List<Map<String, dynamic>> _data = [];
 
+  // 사용자의 차량 리스트
+  List<CarModel> userCarList = [];
+  CarModel? selectedCar;
+  String userName = '';
+
   bool get isLoading => _isLoading;
 
   Future<void> getReady() async {
-    initializeUserInfoAndSubscribeToChanges();
+    await initializeUserInfoAndSubscribeToChanges();
   }
-
 
   Future<void> initializeUserInfoAndSubscribeToChanges() async {
     final user = supabase.auth.currentUser;
     if (user != null) {
-        userUid = user.id;
+      userUid = user.id;
 
+      await getInfo(user.id);
+      await loginSupabase();
       subscribeToUserChanges(user.id);
       notifyListeners();
     }
+  }
+
+  Future<String?> loginSupabase() async {
+    final data = await supabase
+        .from('user_info')
+        .select('name, phone')
+        .eq('id', supabase.auth.currentUser!.id);
+
+    String name = '';
+    if (data.isNotEmpty) {
+      name = '${data[0]['name']}(${data[0]['phone']})';
+    }
+
+    userName = name;
+  }
+
+  Future<void> getInfo(String userId) async {
+    userCarList = [];
+    final data = await supabase
+        .from('CarList')
+        .select(
+            'carNumber, carName, company, gasType, distance, engineOilLastDate, missionOilLastDate, breakOilLastDate, breakPadLastDate, powerSteeringWheelLastDate')
+        .eq('id', userId);
+
+    if (data.isNotEmpty) {
+      data.forEach((e) {
+        userCarList.add(CarModel(
+          carNumber: e['carNumber'],
+          carName: e['carName'],
+          company: e['company'],
+          gasType: e['gasType'],
+          distance: e['distance'],
+          engineOilLastDate: e['engineOilLastDate'],
+          missionOilLastDate: e['missionOilLastDate'],
+          breakOilLastDate: e['breakOilLastDate'],
+          breakPadLastDate: e['breakPadLastDate'],
+          powerSteeringWheelLastDate: e['powerSteeringWheelLastDate'],
+        ));
+      });
+      if (selectedCar != null) {
+        selectedCar = userCarList.firstWhere(
+            (element) => element.carNumber == selectedCar!.carNumber);
+      } else {
+        selectedCar = userCarList[0];
+      }
+    }
+    notifyListeners();
+  }
+
+  void changeSelectCar(String value) {
+    final selected =
+        userCarList.firstWhere((element) => element.carNumber == value);
+    selectedCar = selected;
+    notifyListeners();
   }
 
   void subscribeToUserChanges(String userId) {
@@ -34,15 +96,12 @@ class MainViewModel extends ChangeNotifier {
         .eq('uid', userId)
         .order('date', ascending: false)
         .listen((data) {
-
-        _data = data;
-        _isLoading = false;
-        notifyListeners();
-    }, onError: (error) {
-
-        _isLoading = false;
-        notifyListeners();
-    });
+          _data = data;
+          _isLoading = false;
+          notifyListeners();
+        }, onError: (error) {
+          _isLoading = false;
+          notifyListeners();
+        });
   }
-
 }

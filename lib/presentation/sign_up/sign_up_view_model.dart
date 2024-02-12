@@ -1,13 +1,12 @@
 import 'dart:developer';
 
+import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../car_main_screen/main_screen.dart';
 
 class SignInUpwModel extends ChangeNotifier {
-
-
   String getId = '';
   String getPass = '';
   String getNamePass = '';
@@ -32,12 +31,13 @@ class SignInUpwModel extends ChangeNotifier {
       email: getId,
       password: getPass,
       data: {
-        'name': getNamePass,
+        'username': getNamePass,
         'phone': getPhonePass,
       },
     );
     if (res.user != null) {
       await supabase.from('user_info').insert({
+        'id': res.user!.id,
         'name': getNamePass,
         'phone': getPhonePass,
       });
