@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../car_main_screen/main_screen.dart';
@@ -232,20 +233,8 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
                 tabInfo( '와이퍼'),
 
               ],
-              indicator: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(
-                  //배경 그라데이션 적용
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Colors.blue,
-                    Colors.indigo,
-                  ],
-                ),
-              ),
-              labelColor: Colors.white,
+
+              labelColor: Colors.black,
               unselectedLabelColor: Colors.black,
               controller: _tabController,
             ),
@@ -294,12 +283,15 @@ Widget tabInfo( String title) {
 Widget tabViewInfo(String content) {
   return ListView(
     children: [
-      Container(
-        alignment: Alignment.center,
-        child: Text(
-          content,
-          style: TextStyle(
-            fontSize: 20,
+      Padding(
+        padding:  EdgeInsets.symmetric(vertical: 16.0.h, horizontal: 16.0.w),
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            content,
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ),
       ),
