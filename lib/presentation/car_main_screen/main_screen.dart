@@ -23,6 +23,7 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+
 class _MainScreenState extends State<MainScreen> {
   final ScrollController _carInspectionScrollController = ScrollController();
   final ScrollController _carInfoScrollController = ScrollController();
@@ -34,7 +35,12 @@ class _MainScreenState extends State<MainScreen> {
       notifier.getReady().then((value) => setState(() {}));
     });
   }
-
+  @override
+  void dispose() {
+    _carInfoScrollController.dispose();
+    _carInspectionScrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final viewmodel = context.watch<MainViewModel>();
@@ -47,8 +53,23 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           TextButton(
               onPressed: () async {
-                await supabase.auth.signOut();
-                context.go('/');
+                await showDialog(context: context, builder: (BuildContext context) { return AlertDialog( content: const Text('로그아웃 하시겠습니까.'),actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: const Text('닫기'),
+                  ),
+                  TextButton(
+                    onPressed: () async{
+                      await supabase.auth.signOut();
+                      context.pop(true);
+                      context.go('/');
+                    },
+                    child: const Text('확인'),
+                  ),
+                ],); });
+
               },
               child: Text('로그아웃')),
         ],
@@ -374,18 +395,6 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Checkbox(
-        //   checkColor: Colors.green,
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(15),
-        //   ),
-        //   value: viewmodel.isChecked,
-        //   onChanged: (bool? value) {
-        //     setState(() {
-        //       isChecked = value;
-        //     });
-        //   },
-        // ),
         Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
