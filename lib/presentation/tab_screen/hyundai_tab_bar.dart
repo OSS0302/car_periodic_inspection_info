@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../car_main_screen/main_screen.dart';
@@ -234,6 +233,7 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
 
               ],
 
+
               labelColor: Colors.black,
               unselectedLabelColor: Colors.black,
               controller: _tabController,
@@ -283,10 +283,10 @@ Widget tabInfo( String title) {
 Widget tabViewInfo(String content) {
   return ListView(
     children: [
-      Padding(
-        padding:  EdgeInsets.symmetric(vertical: 16.0.h, horizontal: 16.0.w),
-        child: Container(
-          alignment: Alignment.center,
+      Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
           child: Text(
             content,
             style: TextStyle(
