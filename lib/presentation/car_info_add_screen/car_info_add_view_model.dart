@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../car_main_screen/main_screen.dart';
-
 
 class CarInfoAddViewModel extends ChangeNotifier {
   String? userUid;
@@ -55,16 +51,14 @@ class CarInfoAddViewModel extends ChangeNotifier {
         .eq('uid', userId)
         .order('date', ascending: false)
         .listen((data) {
-
-      _data = data;
-      notifyListeners();
-    }, onError: (error) {
-
-      notifyListeners();
-    });
+          _data = data;
+          notifyListeners();
+        }, onError: (error) {
+          notifyListeners();
+        });
   }
 
- Future <bool> validateAndSubmit() async {
+  Future<bool> validateAndSubmit() async {
     try {
       await supabase.from('CarPeriodicAdd').insert({
         'company': getCompany.trim() ?? '',

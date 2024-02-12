@@ -10,7 +10,6 @@ import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_view_m
 import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_up/sign_up_view_model.dart';
 import 'package:car_periodic_inspection_info/presentation/tab_screen/hyundai_tab_bar.dart';
-import 'package:car_periodic_inspection_info/presentation/tab_screen/kia_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -37,13 +36,17 @@ final GoRouter router = GoRouter(
     GoRoute(
     name: '/mainScreen',
     path: '/mainScreen',
-      builder: (context, state) => ChangeNotifierProvider(
+      builder: (context, state) {
+        final carSelect = state.uri.queryParameters['car_select'] ?? '000';
+        final carNumber = state.uri.queryParameters['car_number'] ?? '00000000';
+        return ChangeNotifierProvider(
         create: (_) => MainViewModel(),
         child: MainScreen(
-          carSelect: state.uri.queryParameters['car_select'] ?? '000',
-          carNumber: state.uri.queryParameters['car_number'] ?? '00000000',
+          carSelect: carSelect,
+          carNumber: carNumber,
         ),
-      ),
+      );
+      },
     ),
     GoRoute(
       path: '/addInfoScreen',
@@ -62,11 +65,6 @@ final GoRouter router = GoRouter(
       path: '/hyundaiScreen',
       builder: (BuildContext context, GoRouterState state) {
         return  HyundaiScreen();
-      },
-    ),GoRoute(
-      path: '/kiaScreen',
-      builder: (BuildContext context, GoRouterState state) {
-        return  KiaScreen();
       },
     ),
 

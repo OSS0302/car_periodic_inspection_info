@@ -53,14 +53,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
 //
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      await supabase.from('CarPeriodicAdd').insert({
-        'company': companyController.text.trim() ?? '',
-        'car_select': carSelectController.text.trim() ?? '',
-        'gas_select': gasSelectController.text.trim() ?? '',
-        'check_type': checkTypeController.text.trim() ?? '',
-        'car_number': carNumberController.text.trim() ?? '',
-        'distance': int.tryParse(distanceController.text.trim()) ?? 0,
-      });
+
 
       context.go('/mainScreen', extra: {
         'company': companyController.text,
@@ -73,12 +66,6 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
     }
   }
 
-  Future<void> initializeUserInfoAndSubscribeToChanges() async {
-    final user = supabase.auth.currentUser;
-    setState(() {
-      userUid = user?.id;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +119,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                       return null;
                     },
                     onChanged: (String value) {
-                      viewModel.setValue(carSelectString: value);
+                     viewModel.setValue(carSelectString: value);
                     },
                     controller: carSelectController,
                     decoration: InputDecoration(
@@ -232,7 +219,11 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                               await viewModel.validateAndSubmit().then((value) {
 
                                 if (value) {
-                                  context.go('/mainScreen');
+                                  context.goNamed('/mainScreen', queryParameters: {
+                                    'car_select': carSelectController.text,
+                                    'car_number': carNumberController.text,
+                                  });
+
                                 }
                               });
                             }
