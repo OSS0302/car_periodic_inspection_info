@@ -432,7 +432,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    context.push('/kiaScreen');
                   },
                   child: Column(
                     children: [
@@ -470,7 +469,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Image.network(
                             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-qoM9XlDnnzhQDBmFlKTfgUNkUaAowC7gYjStMmvzl5rshhjQ8yNzNIVqxDOx78TPX4&usqp=CAU',
                           )),
-                      Text('로노삼성'),
+                      Text('르노코리아'),
                     ],
                   ),
                 ),
