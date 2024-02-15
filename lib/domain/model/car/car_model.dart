@@ -18,7 +18,7 @@ class CarModel with _$CarModel {
     String? breakOilLastDate,
     String? breakPadLastDate,
     String? powerSteeringWheelLastDate,
-    String? differentialOil,
+    String? differentialOilLastDate,
 
   }) = _CarModel;
 

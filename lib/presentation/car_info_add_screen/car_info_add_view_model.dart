@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../domain/model/car/car_model.dart';
 import '../car_main_screen/main_screen.dart';
 
 class CarInfoAddViewModel extends ChangeNotifier {
@@ -26,6 +25,7 @@ class CarInfoAddViewModel extends ChangeNotifier {
     '브레이크오일': 'breakOilLastDate',
     '브레이크패드': 'breakPadLastDate',
     '파워스테어링오일': 'powerSteeringWheelLastDate',
+    '디퍼런셜오일': 'differentialOilLastDate',
   };
   String selectedSettingType = '변속기오일';
 
@@ -114,8 +114,8 @@ class CarInfoAddViewModel extends ChangeNotifier {
           engineOilLastDate: selectedCarData?.engineOilLastDate,
           breakOilLastDate: selectedCarData?.breakOilLastDate,
           breakPadLastDate: selectedCarData?.breakPadLastDate,
-          powerSteeringWheelLastDate:
-              selectedCarData?.powerSteeringWheelLastDate,
+          powerSteeringWheelLastDate: selectedCarData?.powerSteeringWheelLastDate,
+          differentialOilLastDate: selectedCarData?.differentialOilLastDate,
         ).toJson());
       } else {
         carInfo.addAll(CarModel(

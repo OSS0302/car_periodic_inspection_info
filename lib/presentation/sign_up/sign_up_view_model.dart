@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

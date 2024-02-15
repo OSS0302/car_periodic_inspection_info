@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../domain/model/car/car_model.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -116,9 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                   context.push('/addScreen').then((value) {
                     final notifier = context.read<MainViewModel>();
                     notifier.getReady();
-                    setState(() {});
                   });
-                  setState(() {});
                 },
                 child: Text('차량등록'),
               ),
@@ -251,6 +250,9 @@ class _MainScreenState extends State<MainScreen> {
                             timeDate: viewmodel
                                     .selectedCar?.powerSteeringWheelLastDate ??
                                 ''),
+                        mainBoard(
+                            title: '디퍼런셜오일',
+                            timeDate: viewmodel.selectedCar?.differentialOilLastDate ?? ''),
                       ],
                     ),
                   ),
@@ -262,13 +264,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget carInfo() {
-    final viewmodel = context.watch<MainViewModel>();
-    return viewmodel.selectedCar != null
+    final viewModel = context.watch<MainViewModel>();
+    return viewModel.selectedCar != null
         ? StreamBuilder<List<Map<String, dynamic>>>(
             stream: supabase
                 .from('CarPeriodicAdd')
                 .stream(primaryKey: ['id']).eq(
-                    'car_number', viewmodel.selectedCar!.carNumber),
+                    'car_number', viewModel.selectedCar!.carNumber),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

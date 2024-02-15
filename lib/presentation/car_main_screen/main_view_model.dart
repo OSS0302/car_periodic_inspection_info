@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:car_periodic_inspection_info/domain/model/car/car_medel.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../domain/model/car/car_model.dart';
 
 class MainViewModel extends ChangeNotifier {
   String? userUid;
@@ -48,13 +48,13 @@ class MainViewModel extends ChangeNotifier {
 
     userName = name;
   }
-
+  // 날짜 보이게 하는 영역
   Future<void> getInfo(String userId) async {
     userCarList = [];
     final data = await supabase
         .from('CarList')
         .select(
-            'carNumber, carName, company, gasType, distance, engineOilLastDate, missionOilLastDate, breakOilLastDate, breakPadLastDate, powerSteeringWheelLastDate')
+            'carNumber, carName, company, gasType, distance, engineOilLastDate, missionOilLastDate, breakOilLastDate, breakPadLastDate, powerSteeringWheelLastDate, differentialOilLastDate')
         .eq('id', userId);
 
     if (data.isNotEmpty) {
@@ -70,6 +70,7 @@ class MainViewModel extends ChangeNotifier {
           breakOilLastDate: e['breakOilLastDate'],
           breakPadLastDate: e['breakPadLastDate'],
           powerSteeringWheelLastDate: e['powerSteeringWheelLastDate'],
+          differentialOilLastDate: e['differentialOilLastDate'],
         ));
       });
       if (selectedCar != null) {

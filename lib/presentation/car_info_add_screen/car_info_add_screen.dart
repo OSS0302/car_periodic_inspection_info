@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../domain/model/car/car_medel.dart';
+import '../../domain/model/car/car_model.dart';
+
 
 final supabase = Supabase.instance.client;
 
@@ -231,7 +232,7 @@ class _CarInfoAddScreenState extends State<CarInfoAddScreen> {
                               });
                             }
                           },
-                          child: Text('작성 완료'))),
+                          child: const Text('작성 완료'))),
                 ],
               ),
             ),

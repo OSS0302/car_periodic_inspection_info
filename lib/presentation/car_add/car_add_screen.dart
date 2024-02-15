@@ -1,5 +1,4 @@
 import 'package:car_periodic_inspection_info/presentation/car_add/car_add_view_model.dart';
-import 'package:car_periodic_inspection_info/presentation/car_info_add_screen/car_info_add_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -54,11 +53,11 @@ class _CarAddScreenState extends State<CarAddScreen> {
   void validateAndSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       await supabase.from('CarPeriodicAdd').insert({
-        'company': companyController.text.trim() ?? '',
-        'car_select': carSelectController.text.trim() ?? '',
-        'gas_select': gasSelectController.text.trim() ?? '',
-        'check_type': checkTypeController.text.trim() ?? '',
-        'car_number': carNumberController.text.trim() ?? '',
+        'car_select': carSelectController.text.trim(),
+        'company': companyController.text.trim(),
+        'gas_select': gasSelectController.text.trim(),
+        'check_type': checkTypeController.text.trim(),
+        'car_number': carNumberController.text.trim(),
         'distance': int.tryParse(distanceController.text.trim()) ?? 0,
       });
 
