@@ -114,9 +114,10 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               TextButton(
                 onPressed: () async {
-                  context.push('/addScreen').then((value) {
+                  context.pushNamed('addScreen').then((value) {
                     final notifier = context.read<MainViewModel>();
                     notifier.getReady();
+                    setState(() {});
                   });
                 },
                 child: Text('차량등록'),

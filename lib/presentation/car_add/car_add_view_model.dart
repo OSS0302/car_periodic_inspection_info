@@ -32,12 +32,12 @@ class CarAddViewModel extends ChangeNotifier {
     if (user != null) {
       userUid = user.id;
 
-      subscribeToUserChanges(user.id);
+      await subscribeToUserChanges(user.id);
       notifyListeners();
     }
   }
 
-  void subscribeToUserChanges(String userId) {
+  Future<void> subscribeToUserChanges(String userId) async {
     _streamSubscription = supabase
         .from('CarPeriodicAdd')
         .stream(primaryKey: ['id'])

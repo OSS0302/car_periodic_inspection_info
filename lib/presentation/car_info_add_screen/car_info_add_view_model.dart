@@ -135,10 +135,10 @@ class CarInfoAddViewModel extends ChangeNotifier {
           type: DateFormat('yy/MM/dd - HH:mm').format(DateTime.now()).toString()
         });
       }
+
+      await supabase.from('CarList').update(data).eq("carNumber", getCarNumber);
+
       log('message ${data.toString()}');
-
-      await supabase.from('CarList').upsert(data).eq("carNumber", getCarNumber);
-
       return true;
     } catch (e) {
       return false;

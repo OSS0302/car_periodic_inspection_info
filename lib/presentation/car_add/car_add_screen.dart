@@ -210,7 +210,7 @@ class _CarAddScreenState extends State<CarAddScreen> {
                             if (_formKey.currentState!.validate()) {
                               await viewModel.insertCar().then((value) {
                                 if (value) {
-                                  context.go('/mainScreen');
+                                  context.pop();
                                 }
                               });
                             }

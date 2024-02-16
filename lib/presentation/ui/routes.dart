@@ -65,14 +65,15 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+        GoRoute(
+          path: 'addScreen',
+          name: 'addScreen',
+          builder: (context, state) => ChangeNotifierProvider(
+            create: (_) => CarAddViewModel(),
+            child: const CarAddScreen(),
+          ),
+        ),
       ],
-    ),
-    GoRoute(
-      path: '/addScreen',
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => CarAddViewModel(),
-        child: const CarAddScreen(),
-      ),
     ),
     GoRoute(
       path: '/myPageScreen',
