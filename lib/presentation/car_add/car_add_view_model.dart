@@ -5,7 +5,6 @@ import '../car_info_add_screen/car_info_add_screen.dart';
 
 class CarAddViewModel extends ChangeNotifier {
   String? userUid;
-  StreamSubscription? _streamSubscription;
   List<Map<String, dynamic>> _data = [];
   String getCompany = '';
   String getCarSelect = '';
@@ -32,24 +31,11 @@ class CarAddViewModel extends ChangeNotifier {
     if (user != null) {
       userUid = user.id;
 
-      await subscribeToUserChanges(user.id);
       notifyListeners();
     }
   }
 
-  Future<void> subscribeToUserChanges(String userId) async {
-    _streamSubscription = supabase
-        .from('CarPeriodicAdd')
-        .stream(primaryKey: ['id'])
-        .eq('uid', userId)
-        .order('date', ascending: false)
-        .listen((data) {
-          _data = data;
-          notifyListeners();
-        }, onError: (error) {
-          notifyListeners();
-        });
-  }
+
 
   Future<bool> insertCar() async {
     final user = supabase.auth.currentUser;
