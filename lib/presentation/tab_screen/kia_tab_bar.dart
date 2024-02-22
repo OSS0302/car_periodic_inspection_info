@@ -36,7 +36,7 @@ class _KiaScreenState extends State<KiaScreen> with TickerProviderStateMixin {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text("데이터가 없습니다."));
         }
-        var data = snapshot.data!;
+        var data = snapshot.data!.where((item) => item['company'] == '기아').toList();
         return ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {

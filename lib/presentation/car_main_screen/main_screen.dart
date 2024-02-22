@@ -553,7 +553,9 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/ssangyong');
+                  },
                   child: Column(
                     children: [
                       Container(

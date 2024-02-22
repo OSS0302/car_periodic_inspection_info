@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 import '../car_main_screen/main_screen.dart';
 import 'hyundai_tab_info.dart';
 
-class HyundaiScreen extends StatefulWidget {
-  const HyundaiScreen({Key? key}) : super(key: key);
+class SsangyongScreen extends StatefulWidget {
+  const SsangyongScreen({Key? key}) : super(key: key);
 
   @override
-  _HyundaiScreenState createState() => _HyundaiScreenState();
+  _SsangyongScreenState createState() => _SsangyongScreenState();
 }
 
-class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateMixin {
+class _SsangyongScreenState extends State<SsangyongScreen> with TickerProviderStateMixin {
   late final Stream<List<Map<String, dynamic>>> carDataStream;
   late TabController _tabController;
   String? userUid;
@@ -52,7 +52,7 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text("데이터가 없습니다."));
         }
-        var data = snapshot.data!.where((item) => item['company'] == '현대').toList();
+        var data = snapshot.data!.where((item) => item['company'] == '쌍용').toList();
         return ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {

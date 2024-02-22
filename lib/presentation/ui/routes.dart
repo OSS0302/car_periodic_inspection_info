@@ -19,6 +19,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/model/car/car_model.dart';
+import '../tab_screen/ssangyong_tab_bar.dart';
 
 
 final GoRouter router = GoRouter(
@@ -91,6 +92,11 @@ final GoRouter router = GoRouter(
       path: '/kiaScreen',
       builder: (BuildContext context, GoRouterState state) {
         return KiaScreen();
+      },
+    ), GoRoute(
+      path: '/ssangyong',
+      builder: (BuildContext context, GoRouterState state) {
+        return SsangyongScreen();
       },
     ),
   ],
