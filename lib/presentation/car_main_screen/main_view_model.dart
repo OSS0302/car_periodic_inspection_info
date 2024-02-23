@@ -9,7 +9,6 @@ class MainViewModel extends ChangeNotifier {
   String? userUid;
   bool _isLoading = true;
   final supabase = Supabase.instance.client;
-  StreamSubscription? _streamSubscription;
   List<Map<String, dynamic>> _data = [];
 
   // 사용자의 차량 리스트
@@ -30,7 +29,6 @@ class MainViewModel extends ChangeNotifier {
 
       await getInfo(user.id);
       await loginSupabase();
-      subscribeToUserChanges(user.id);
       notifyListeners();
     }
   }
@@ -48,13 +46,14 @@ class MainViewModel extends ChangeNotifier {
 
     userName = name;
   }
+
   // 날짜 보이게 하는 영역
   Future<void> getInfo(String userId) async {
     userCarList = [];
     final data = await supabase
         .from('CarList')
         .select(
-            'carNumber, carName, company, gasType, distance, engineOilLastDate, missionOilLastDate, breakOilLastDate, breakPadLastDate, powerSteeringWheelLastDate, differentialOilLastDate')
+        'carNumber, carName, company, gasType, distance, engineOilLastDate, missionOilLastDate, breakOilLastDate, breakPadLastDate, powerSteeringWheelLastDate, differentialOilLastDate')
         .eq('id', userId);
 
     if (data.isNotEmpty) {
@@ -75,7 +74,7 @@ class MainViewModel extends ChangeNotifier {
       });
       if (selectedCar != null) {
         selectedCar = userCarList.firstWhere(
-            (element) => element.carNumber == selectedCar!.carNumber);
+                (element) => element.carNumber == selectedCar!.carNumber);
       } else {
         selectedCar = userCarList[0];
       }
@@ -85,24 +84,9 @@ class MainViewModel extends ChangeNotifier {
 
   void changeSelectCar(String value) {
     final selected =
-        userCarList.firstWhere((element) => element.carNumber == value);
+    userCarList.firstWhere((element) => element.carNumber == value);
     selectedCar = selected;
     notifyListeners();
   }
 
-  void subscribeToUserChanges(String userId) {
-    _streamSubscription = supabase
-        .from('CarPeriodicAdd')
-        .stream(primaryKey: ['id'])
-        .eq('uid', userId)
-        .order('date', ascending: false)
-        .listen((data) {
-          _data = data;
-          _isLoading = false;
-          notifyListeners();
-        }, onError: (error) {
-          _isLoading = false;
-          notifyListeners();
-        });
-  }
 }
