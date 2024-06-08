@@ -52,7 +52,9 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text("데이터가 없습니다."));
         }
-        var data = snapshot.data!.where((item) => item['company'] == '현대').toList();
+        var data = snapshot.data!.where((item) {
+          return item['company'] == '현대'&& item['uid'] == userUid  ;
+        }).toList();
         return ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {
@@ -201,7 +203,7 @@ class _HyundaiScreenState extends State<HyundaiScreen> with TickerProviderStateM
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '정기정보앱',
+          '현대 정기정보앱',
         ),
       ),
       body: Column(

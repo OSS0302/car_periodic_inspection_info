@@ -201,7 +201,7 @@ class _SsangyongScreenState extends State<SsangyongScreen> with TickerProviderSt
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '정기정보앱',
+          '쌍용 정기정보앱',
         ),
       ),
       body: Column(

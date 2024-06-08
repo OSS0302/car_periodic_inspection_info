@@ -63,7 +63,7 @@ class _KiaScreenState extends State<KiaScreen> with TickerProviderStateMixin {
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
         title: Text(
-          '정기정보앱',
+          '기아 정기정보앱',
         ),
       ),
       body: Column(

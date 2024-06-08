@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:car_periodic_inspection_info/presentation/car_main_screen/main_screen.dart';
 import 'package:car_periodic_inspection_info/presentation/sign_in/sign_in_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../sign_up/sign_up_screen.dart';
 
 final supabase = Supabase.instance.client;
 
@@ -158,10 +155,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     });
                   },
                   validator: (value) {
-                    if (value == null || value.isEmpty || value.length < 6) {
+                    if (value == null || value.isEmpty) {
                       return '비밀번호를 입력하세요';
+                    } else if (value.length < 6) {
+                      return '비밀번호는 최소 8자 이상이어야 합니다.';
                     }
-                    return null;
+                    return null; // 모든 검증을 통과했다면 null을 반환
                   },
                   controller: pwController,
                   obscureText: true,
@@ -171,7 +170,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     labelText: 'pw',
                     hintText: '비밀번호를 입력해주세요',
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Colors.blue,
                         width: 2,
                       ),
